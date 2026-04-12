@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ARTHMETIC</title>
+    <title>Dashboard - ACE HARDA</title>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f7f9; padding-bottom: 20px; overflow-x: hidden; }
         
         /* ☰ SIDEBAR (MENU BAR) STYLES ☰ */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.3); z-index: 1000; transition: 0.4s; overflow-y: auto; }
         .sidebar.active { left: 0; }
-        
-        /* Sidebar Overlay (Backdrop) */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
         .overlay.active { display: block; }
         
-        /* Sidebar Header (Profile Section) */
+        /* Sidebar Header */
         .sidebar-header { background: #004a99; color: white; padding: 30px 20px; text-align: center; }
-        .sidebar-header img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #ffca28; margin-bottom: 10px; }
-        .sidebar-header h3 { margin: 0; font-size: 18px; }
+        .sidebar-header img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #ffca28; margin-bottom: 10px; background: white; }
+        .sidebar-header h3 { margin: 0; font-size: 18px; text-transform: capitalize; }
         .sidebar-header p { margin: 5px 0 0; font-size: 13px; opacity: 0.8; }
         
         /* Sidebar Menu Items */
@@ -26,7 +24,6 @@
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; text-decoration: none; font-weight: bold; font-size: 15px; border-bottom: 1px solid #eee; }
         .menu-item:active { background: #f0f4f7; }
         .menu-item .m-icon { margin-right: 15px; font-size: 20px; }
-        
         .logout-menu { color: #d32f2f; border-bottom: none; }
 
         /* Dashboard Top Bar */
@@ -35,7 +32,7 @@
         .app-bar-title { font-weight: bold; font-size: 18px; letter-spacing: 1px; }
         
         /* Banner */
-        .banner-container { margin: 10px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .banner-container { margin: 10px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); border: 2px solid white; }
         .banner-container img { width: 100%; display: block; height: auto; }
         
         /* Grid Menu Buttons */
@@ -45,8 +42,8 @@
         .menu-btn .icon { font-size: 38px; margin-bottom: 8px; display: block; }
         .menu-btn .text { font-size: 14px; font-weight: bold; }
         
-        /* Bottom Banner Info */
-        .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 10px; padding: 15px; border-radius: 10px; color: black; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        /* Bottom Info Banner */
+        .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 15px 10px; padding: 15px; border-radius: 10px; color: black; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .address-bar { background: #212121; color: white; text-align: center; padding: 8px; font-size: 12px; margin-top: 15px; border-radius: 5px; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
@@ -55,16 +52,17 @@
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="logo.png" alt="User"> <h3>Welcome Student</h3>
-            <p>Arithmetic Computer Education</p>
+            <img src="logo.png" alt="ACE Logo">
+            <h3 id="sideUserName">Student Name</h3>
+            <p>ACE Academy Member</p>
         </div>
         <div class="sidebar-menu">
             <a href="dashboard.html" class="menu-item"><span class="m-icon">🏠</span> Home</a>
-            <a href="pdf_list.html" class="menu-item"><span class="m-icon">📚</span> My Courses</a>
-            <a href="payment.html" class="menu-item"><span class="m-icon">💳</span> Buy Notes</a>
-            <a href="#" class="menu-item" onclick="showMsg('User Profile')"><span class="m-icon">👤</span> My Profile</a>
-            <a href="https://wa.me/919589769913" class="menu-item"><span class="m-icon">💬</span> Help Desk (WhatsApp)</a>
-            <a href="#" class="menu-item" onclick="showMsg('Settings')"><span class="m-icon">⚙️</span> Settings</a>
+            <a href="test_list.html" class="menu-item"><span class="m-icon">📝</span> My Tests</a>
+            <a href="pdf_list.html" class="menu-item"><span class="m-icon">📚</span> PDF Notes</a>
+            <a href="result.html" class="menu-item"><span class="m-icon">🏆</span> My Results</a>
+            <a href="payment.html" class="menu-item"><span class="m-icon">💳</span> Buy Premium</a>
+            <a href="https://wa.me/919589769913" class="menu-item"><span class="m-icon">💬</span> WhatsApp Support</a>
             <a href="#" onclick="logoutApp()" class="menu-item logout-menu"><span class="m-icon">⏻</span> Logout</a>
         </div>
     </div>
@@ -72,15 +70,15 @@
     <div class="app-bar">
         <div class="icons" onclick="openMenu()">☰</div>
         <div class="app-bar-title">ARTHMETIC</div>
-        <div class="icons" onclick="showMsg('Notifications')">🔔</div>
+        <div class="icons" onclick="alert('No new notifications')">🔔</div>
     </div>
 
     <div class="banner-container">
-        <img src="banner.png" alt="Banner">
+        <img src="banner.png" alt="ACE Banner">
     </div>
 
     <div class="grid-container">
-        <div class="menu-btn" onclick="window.location.href='test.html'">
+        <div class="menu-btn" onclick="window.location.href='test_list.html'">
             <span class="icon">📝</span>
             <span class="text">Online Exam</span>
         </div>
@@ -90,27 +88,44 @@
             <span class="text">PDF Notes</span>
         </div>
         
-        <div class="menu-btn" onclick="window.location.href='payment.html'">
+        <div class="menu-btn" style="background-color: #c62828;" onclick="window.location.href='payment.html'">
             <span class="icon">💡</span>
             <span class="text">Buy Course</span>
         </div>
         
-        <div class="menu-btn" onclick="showMsg('Result Portal')">
+        <div class="menu-btn" style="background-color: #2e7d32;" onclick="window.location.href='result.html'">
             <span class="icon">🏆</span>
             <span class="text">My Result</span>
+        </div>
+        
+        <div class="menu-btn" style="background-color: #0277bd;" onclick="alert('Coming Soon!')">
+            <span class="icon">💼</span>
+            <span class="text">Job Alert</span>
+        </div>
+        
+        <div class="menu-btn" style="background-color: #ef6c00;" onclick="window.location.href='result.html'">
+            <span class="icon">👤</span>
+            <span class="text">My Profile</span>
         </div>
     </div>
 
     <div class="bottom-banner">
         <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 10px;">
-            <h2 style="margin: 0; color: #b71c1c;">ACE HARDA</h2>
+            <h2 style="margin: 0; color: #b71c1c; font-weight: 900;">ACE HARDA</h2>
             <div style="text-align: right; font-weight: bold;">📞 95897-69913</div>
         </div>
-        <p style="margin: 0; font-weight: bold; line-height: 1.6;">Computer Courses • CPCT • Tally • Web Dev • MP ASI • Typing Special Batches</p>
+        <p style="margin: 0; font-weight: bold; line-height: 1.6;">Computer Courses • CPCT • Tally • MP ASI • MPTET • Special Batches</p>
         <div class="address-bar">📍 Harda, Madhya Pradesh</div>
     </div>
 
     <script>
+        // User ka naam Sidebar mein dikhane ke liye
+        window.onload = function() {
+            let userName = localStorage.getItem("userName") || "Student";
+            document.getElementById("sideUserName").innerText = userName;
+        };
+
+        // Sidebar Functions
         function openMenu() {
             document.getElementById("sidebar").classList.add("active");
             document.getElementById("overlay").classList.add("active");
@@ -122,13 +137,10 @@
         }
 
         function logoutApp() {
-            if(confirm("Kyu aap logout karna chahte hain?")) {
+            if(confirm("Logout karna chahte hain?")) {
+                localStorage.clear(); // Saari login details clear kar do
                 window.location.href = "index.html";
             }
-        }
-
-        function showMsg(msg) {
-            alert(msg + " coming soon!");
         }
     </script>
 
