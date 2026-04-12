@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results - ACE</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f0f4f7; padding-bottom: 20px; }
+        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .container { padding: 15px; }
+        
+        /* Student Profile Card */
+        .profile-card { background: linear-gradient(135deg, #004a99, #003366); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .profile-icon { font-size: 40px; background: rgba(255,255,255,0.2); width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 2px solid #ffca28; }
+        .profile-info h2 { margin: 0; font-size: 18px; text-transform: uppercase; }
+        .profile-info p { margin: 5px 0 0; font-size: 12px; color: #ffca28; font-weight: bold; }
+        
+        /* Result Cards */
+        .result-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); border-left: 5px solid #2e7d32; }
+        .result-card.average { border-left-color: #f57c00; }
+        .result-card.poor { border-left-color: #d32f2f; }
+        
+        .test-title { font-weight: 900; color: #333; font-size: 15px; margin-bottom: 8px; }
+        .test-date { font-size: 11px; color: #888; margin-bottom: 12px; }
+        
+        .score-row { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 6px; }
+        .score-box { text-align: center; }
+        .score-box span { display: block; font-size: 11px; color: #666; font-weight: bold; text-transform: uppercase; }
+        .score-box strong { font-size: 18px; color: #004a99; }
+        
+        .rank-badge { background: #ffebee; color: #b71c1c; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .rank-badge.good { background: #e8f5e9; color: #2e7d32; }
+
+        .section-title { font-size: 14px; font-weight: 900; color: #555; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+<div class="header" onclick="window.location.href='dashboard.html'">
+    <span style="cursor:pointer;">⬅ Performance Report</span>
+</div>
+
+<div class="container">
+    
+    <div class="profile-card">
+        <div class="profile-icon">🎓</div>
+        <div class="profile-info">
+            <h2 id="studentName">Student Name</h2>
+            <p>ID: <span id="studentId">Loading...</span></p>
+        </div>
+    </div>
+
+    <div class="section-title">📊 Recent Mock Tests</div>
+
+    <div class="result-card">
+        <div class="test-title">MP ASI Previous Year Paper 2025</div>
+        <div class="test-date">Attempted on: 10 April 2026</div>
+        <div class="score-row">
+            <div class="score-box">
+                <span>Score</span>
+                <strong>85/100</strong>
+            </div>
+            <div class="score-box">
+                <span>Accuracy</span>
+                <strong>85%</strong>
+            </div>
+            <div class="rank-badge good">🏆 Rank: 12</div>
+        </div>
+    </div>
+
+    <div class="result-card average">
+        <div class="test-title">MPTET Varg 2 - Science & Pedagogy</div>
+        <div class="test-date">Attempted on: 08 April 2026</div>
+        <div class="score-row">
+            <div class="score-box">
+                <span>Score</span>
+                <strong>105/150</strong>
+            </div>
+            <div class="score-box">
+                <span>Accuracy</span>
+                <strong>70%</strong>
+            </div>
+            <div class="rank-badge">📉 Rank: 145</div>
+        </div>
+    </div>
+
+    <div class="result-card">
+        <div class="test-title">CPCT High-Speed Typing Test</div>
+        <div class="test-date">Attempted on: 05 April 2026</div>
+        <div class="score-row">
+            <div class="score-box">
+                <span>Speed</span>
+                <strong>38 WPM</strong>
+            </div>
+            <div class="score-box">
+                <span>Font</span>
+                <strong>Mangal</strong>
+            </div>
+            <div class="rank-badge good">⭐ Qualified</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // App ki memory se user ka naam aur number nikalna
+    let userName = localStorage.getItem("userName") || "Student";
+    let userMobile = localStorage.getItem("userMobile") || "Not Registered";
+
+    document.getElementById("studentName").innerText = userName;
+    document.getElementById("studentId").innerText = userMobile;
+</script>
+
+</body>
+</html>
