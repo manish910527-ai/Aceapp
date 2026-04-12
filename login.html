@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ACE</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #004a99; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .auth-card { background: white; width: 85%; max-width: 400px; padding: 40px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; position: relative; }
+        .logo-icon { font-size: 50px; margin-bottom: 10px; }
+        h2 { color: #004a99; margin: 0 0 5px; font-size: 26px; text-transform: uppercase; font-weight: 900; }
+        p { color: #666; font-size: 14px; margin-bottom: 25px; }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; color: #333; font-weight: bold; margin-bottom: 5px; }
+        .input-group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; outline: none; }
+        .input-group input:focus { border-color: #004a99; box-shadow: 0 0 5px rgba(0, 74, 153, 0.3); }
+        
+        .btn { background: #004a99; color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn:active { transform: scale(0.98); }
+        
+        .link-text { margin-top: 20px; font-size: 14px; color: #555; }
+        .link-text a { color: #d32f2f; font-weight: bold; text-decoration: none; }
+        
+        /* Loading Overlay */
+        .loader { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); border-radius: 15px; justify-content: center; align-items: center; flex-direction: column; font-weight: bold; color: #004a99; z-index: 10; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #004a99; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <span>Verifying...</span>
+        </div>
+        
+        <div class="logo-icon">💻</div>
+        <h2>Welcome Back</h2>
+        <p>Login to continue learning</p>
+
+        <div class="input-group">
+            <label>Mobile Number</label>
+            <input type="number" id="l_mobile" placeholder="Enter registered number">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="l_pass" placeholder="Enter your password">
+        </div>
+
+        <button class="btn" onclick="loginUser()">LOGIN</button>
+
+        <div class="link-text">
+            New Student? <a href="signup.html">Create Account</a>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyj3rN60WwON-YnY9JyuQQrYPHUoKoR5q9ax0jCiqcK6EJeDRwlWlPXeJUtfe3vzc-k/exec";
+
+        async function loginUser() {
+            let mobile = document.getElementById("l_mobile").value.trim();
+            let pass = document.getElementById("l_pass").value.trim();
+
+            if(!mobile || !pass) {
+                alert("Please enter Mobile and Password!");
+                return;
+            }
+
+            document.getElementById("loader").style.display = "flex";
+
+            try {
+                // API call for login
+                let url = `${API_URL}?action=login&mobile=${encodeURIComponent(mobile)}&pass=${encodeURIComponent(pass)}`;
+                
+                let response = await fetch(url, { redirect: "follow" });
+                let result = await response.text();
+
+                document.getElementById("loader").style.display = "none";
+
+                // Check Google Script Response
+                if(result.startsWith("success")) {
+                    // Agar pass hua toh user ka naam split karke nikalo
+                    let userName = result.split("|")[1]; 
+                    
+                    // User ka data app ke memory mein save kar lo
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("userName", userName);
+                    localStorage.setItem("userMobile", mobile);
+
+                    // Dashboard par bhej do
+                    window.location.href = "dashboard.html";
+                } else if(result === "failed") {
+                    alert("Invalid Mobile Number or Password!");
+                } else {
+                    alert("Server Error! Try again later.");
+                }
+            } catch(error) {
+                document.getElementById("loader").style.display = "none";
+                alert("Internet connection error!");
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - ACE</title>
+    <style>
+        body { 
+            margin: 0; padding: 0; font-family: Arial, sans-serif; 
+            background-color: #004a99; color: white; 
+            height: 100vh; width: 100vw;
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            text-align: center; overflow: hidden;
+        }
+        
+        .wrapper { width: 85%; max-width: 400px; }
+
+        /* 🎓 FIXED LOGO SECTION (Ye apni jagah se bilkul nahi hilega) */
+        .header-section { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; }
+        .logo-circle { 
+            width: 100px; height: 100px; background: white; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-size: 50px; border: 4px solid #ffca28; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        h1 { font-size: 28px; margin: 0 0 5px 0; letter-spacing: 2px; font-weight: 900; }
+        .sub-title { font-size: 13px; opacity: 0.9; margin: 0; letter-spacing: 0.5px; }
+
+        /* ⏳ LOADING SECTION (Shuruati Animation) */
+        #loading-section { height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2); border-top: 4px solid #ffca28; 
+            border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 🔘 BUTTONS SECTION (Jo baad mein aayega) */
+        #button-section { display: none; width: 100%; height: 160px; animation: fadeIn 0.6s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn { 
+            width: 100%; padding: 15px; border-radius: 30px; border: none; 
+            font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; 
+            box-sizing: border-box; display: block; margin-bottom: 15px;
+        }
+        .btn-login { background-color: #ffca28; color: #b71c1c; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-signup { background-color: transparent; color: white; border: 2px solid white; }
+        .btn:active { transform: scale(0.96); }
+        
+        .version-text { font-size: 11px; opacity: 0.5; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="header-section">
+            <div class="logo-circle">🎓</div>
+            <h1>ACE HARDA</h1>
+            <p class="sub-title">Arithmetic Computer Education</p>
+        </div>
+
+        <div id="loading-section">
+            <div class="spinner"></div>
+            <div style="font-size: 14px; opacity: 0.8;">Loading your portal...</div>
+        </div>
+
+        <div id="button-section">
+            <a href="login.html" class="btn btn-login">STUDENT LOGIN</a>
+            <a href="signup.html" class="btn btn-signup">NEW REGISTRATION</a>
+            <div class="version-text">V 1.0.0 | SECURE EDUCATION PORTAL</div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Agar pehle se login hai toh seedha Dashboard
+            if(localStorage.getItem("isLoggedIn") === "true") {
+                window.location.href = "dashboard.html";
+            } else {
+                // Nahi toh 2 second baad Loading hata kar Buttons dikhao
+                setTimeout(function() {
+                    document.getElementById("loading-section").style.display = "none";
+                    document.getElementById("button-section").style.display = "block";
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
