@@ -21,11 +21,14 @@
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; text-decoration: none; font-weight: bold; font-size: 15px; border-bottom: 1px solid #eee; }
         .menu-item:active { background: #f0f4f7; }
         .menu-item .m-icon { margin-right: 15px; font-size: 20px; }
+        
+        /* Admin Link Style */
+        .admin-menu { color: #888; font-size: 13px; margin-top: 20px; border-top: 1px dashed #ccc; }
         .logout-menu { color: #d32f2f; border-bottom: none; }
 
-        /* ✅ UPDATED APP BAR FOR CENTERING */
+        /* Centered App Bar */
         .app-bar { background-color: #004a99; color: white; padding: 12px 10px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .app-bar .icons { font-size: 22px; cursor: pointer; width: 35px; } /* Fixed width for icons to balance center */
+        .app-bar .icons { font-size: 22px; cursor: pointer; width: 35px; } 
         .app-bar-title { flex: 1; text-align: center; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; }
         
         /* Banner */
@@ -68,6 +71,9 @@
             <a href="result.html" class="menu-item"><span class="m-icon">🏆</span> My Results</a>
             <a href="payment.html" class="menu-item"><span class="m-icon">💳</span> Buy Premium</a>
             <a href="https://wa.me/919589769913" class="menu-item"><span class="m-icon">💬</span> Support</a>
+            
+            <a href="admin.html" class="menu-item admin-menu"><span class="m-icon">⚙️</span> Admin Panel</a>
+
             <a href="#" onclick="logoutApp()" class="menu-item logout-menu"><span class="m-icon">⏻</span> Logout</a>
         </div>
     </div>
