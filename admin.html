@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE ADMIN</title>
+    <style>
+        body { font-family: Arial; background: #001a33; padding: 15px; color: white; }
+        .card { background: white; padding: 20px; border-radius: 15px; color: #333; margin-bottom: 20px; border-top: 5px solid #004a99; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="loginBox" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh;">
+        <div class="card" style="text-align:center; width: 90%;">
+            <h2>ACE Admin</h2>
+            <input type="password" id="adminPin" placeholder="PIN Daalein" maxlength="4">
+            <button class="btn" onclick="checkLogin()">UNLOCK</button>
+        </div>
+    </div>
+
+    <div id="adminDashboard" style="display:none;">
+        <div class="card">
+            <h3 style="margin-top:0;">📂 Add Content</h3>
+            <select id="mainSec">
+                <option>Course</option><option>Quiz</option><option>Test Series</option>
+                <option>Previous Year</option><option>PDF Notes</option><option>Online Exam</option>
+            </select>
+            <select id="subFold"><option>CPCT</option><option>Tally</option><option>Basic Computer</option></select>
+            <select id="matType"><option>Test</option><option>PDF</option><option>Video</option></select>
+            <input type="text" id="iName" placeholder="Item Name (e.g. Mock Test 1)">
+            <input type="text" id="iID" placeholder="ID ya Link">
+            <select id="iType"><option value="Paid">Paid</option><option value="Free">Free</option></select>
+            <input type="number" id="iPrice" placeholder="Price (₹)">
+            <button class="btn" onclick="submitData('add_content')">PUBLISH</button>
+        </div>
+        <button class="btn" style="background:#333;" onclick="location.reload()">LOGOUT</button>
+    </div>
+
+    <script>
+        // AAPKA NAYA URL YAHAN SET HAI
+        const MASTER_URL = "https://script.google.com/macros/s/AKfycbxA3pC19JyPPv--cTJbCBh5P1-YEnroJ9chtlKhkE4X0muUxI8-fPV9KRMf1vFHEgsEgw/exec";
+        
+        function checkLogin() {
+            if(document.getElementById('adminPin').value === "9913") {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                document.body.style.background = "#f0f2f5";
+            } else { alert("Galat PIN!"); }
+        }
+        
+        async function submitData(actionType) {
+            let payload = { action: actionType };
+            if(actionType == 'add_content') {
+                payload.mainSection = document.getElementById('mainSec').value;
+                payload.subFolder = document.getElementById('subFold').value;
+                payload.matType = document.getElementById('matType').value;
+                payload.itemName = document.getElementById('iName').value;
+                payload.fileId = document.getElementById('iID').value;
+                payload.type = document.getElementById('iType').value;
+                payload.price = document.getElementById('iPrice').value;
+            }
+            try {
+                let response = await fetch(MASTER_URL, { method: 'POST', body: JSON.stringify(payload) });
+                alert(await response.text());
+                location.reload();
+            } catch(e) { alert("Error!"); }
+        }
+    </script>
+</body>
+</html>
