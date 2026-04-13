@@ -3,122 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Master Admin Panel</title>
+    <title>ACE Master Admin - Pro Control</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
-        .header { background: #004a99; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h3 { color: #d32f2f; margin-top: 0; font-size: 18px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; background: #fafafa; }
-        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .btn:active { transform: scale(0.98); background: #003366; }
-        #loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; font-weight: bold; color: #004a99; }
-        
-        /* Login Area */
-        #loginBox { display: block; text-align: center; }
-        #adminDashboard { display: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        .header { background: #004a99; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 5px solid #004a99; }
+        h3 { color: #333; margin-top: 0; font-size: 16px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; background: #fafafa; }
+        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn:active { transform: scale(0.97); opacity: 0.9; }
+        #loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 1000; justify-content: center; align-items: center; font-weight: bold; color: #004a99; flex-direction: column; }
+        .hint { font-size: 11px; color: #d32f2f; font-weight: bold; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div id="loading">⏳ Processing... Please wait</div>
-<div class="header">ACE HARDA - MASTER CONTROL</div>
+<div id="loading">
+    <div style="font-size: 40px;">⏳</div>
+    <div>Database Update Ho Raha Hai...</div>
+</div>
+
+<div class="header">ACE HARDA MASTER ADMIN</div>
 
 <div class="container">
 
-    <div id="loginBox" class="card">
-        <h3>🔐 Admin Login</h3>
-        <p style="font-size: 14px; color: #666;">Secret PIN daalein Dashboard kholne ke liye</p>
-        <input type="password" id="adminPin" placeholder="****" maxlength="4">
-        <button class="btn" onclick="checkLogin()">UNLOCK PANEL</button>
+    <div class="card" style="border-color: #1976d2;">
+        <h3>📂 Add Content (Test/PDF)</h3>
+        <p class="hint">Dhyan dein: 'Item Name' hi aapka Unique Tag hai.</p>
+        <input type="text" id="iCat" placeholder="Category (e.g. CPCT, MPTET)">
+        <input type="text" id="iName" placeholder="Item Name / Tag (e.g. CPCT_SET_1)">
+        <input type="text" id="iID" placeholder="Sheet ID (for Test) or Drive Link (for PDF)">
+        <select id="iType"><option value="Paid">Paid (Lock)</option><option value="Free">Free (Open)</option></select>
+        <input type="number" id="iPrice" placeholder="Price (₹)">
+        <button class="btn" style="background:#1976d2;" onclick="submitData('add_content')">ADD TO LIST</button>
     </div>
 
-    <div id="adminDashboard">
-        
-        <div class="card">
-            <h3>✅ Approve Payment (User)</h3>
-            <input type="text" id="uName" placeholder="Student Full Name">
-            <input type="number" id="uMobile" placeholder="Mobile Number">
-            <button class="btn" onclick="submitData('approve_user')">ACTIVATE STUDENT</button>
+    <div class="card" style="border-color: #d32f2f;">
+        <h3>✍️ Add New Question</h3>
+        <input type="text" id="qText" placeholder="Enter Question">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <input type="text" id="qA" placeholder="Option A">
+            <input type="text" id="qB" placeholder="Option B">
+            <input type="text" id="qC" placeholder="Option C">
+            <input type="text" id="qD" placeholder="Option D">
         </div>
-
-        <div class="card">
-            <h3>📝 Add New Online Test</h3>
-            <input type="text" id="tTopic" placeholder="Subject (e.g. MP ASI)">
-            <input type="text" id="tName" placeholder="Test Name">
-            <input type="text" id="tID" placeholder="Google Sheet ID of Questions">
-            <select id="tType">
-                <option value="Paid">Paid Test</option>
-                <option value="Free">Free Test</option>
-            </select>
-            <input type="number" id="tPrice" placeholder="Price (0 if Free)">
-            <button class="btn" style="background:#d32f2f;" onclick="submitData('add_test')">UPLOAD TO APP</button>
-        </div>
-
-        <div class="card">
-            <h3>📚 Add New PDF Notes</h3>
-            <input type="text" id="pName" placeholder="PDF Name">
-            <input type="text" id="pLink" placeholder="Drive Link">
-            <select id="pType">
-                <option value="Paid">Paid PDF</option>
-                <option value="Free">Free PDF</option>
-            </select>
-            <input type="number" id="pPrice" placeholder="Price (0 if Free)">
-            <button class="btn" style="background:#2e7d32;" onclick="submitData('add_pdf')">UPLOAD PDF</button>
-        </div>
-
-        <div class="card">
-            <h3>📢 Notice Board Update</h3>
-            <input type="text" id="nMsg" placeholder="New Notification Message...">
-            <button class="btn" style="background:#ff9800;" onclick="submitData('update_notif')">SEND NOTICE 🔔</button>
-        </div>
-
-        <button class="btn" style="background:#333; margin-bottom: 20px;" onclick="location.reload()">🔒 LOGOUT</button>
+        <select id="qAns"><option value="">Correct Answer?</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+        <input type="text" id="qTag" placeholder="Question Tag (Same as Item Name)">
+        <button class="btn" style="background:#d32f2f;" onclick="submitData('add_question')">SAVE TO BANK</button>
     </div>
+
+    <div class="card" style="border-color: #2e7d32;">
+        <h3>✅ Unlock Item for Student</h3>
+        <p class="hint">Wahi Tag dalein jo student ne kharida hai.</p>
+        <input type="text" id="uName" placeholder="Student Name">
+        <input type="number" id="uMobile" placeholder="Student Mobile Number">
+        <input type="text" id="uItemID" placeholder="Item Tag to Unlock (e.g. CPCT_SET_1)">
+        <button class="btn" style="background:#2e7d32;" onclick="submitData('approve_user')">UNLOCK ACCESS 🔒</button>
+    </div>
+
+    <div class="card" style="border-color: #ff9800;">
+        <h3>📢 Notice Board Update</h3>
+        <input type="text" id="nMsg" placeholder="Type message for students...">
+        <button class="btn" style="background:#ff9800;" onclick="submitData('update_notif')">UPDATE NOTICE 🔔</button>
+    </div>
+
+    <button class="btn" style="background:#333; margin-bottom: 30px;" onclick="window.location.href='dashboard.html'">🏠 EXIT ADMIN</button>
 
 </div>
 
 <script>
-    // 🔗 API CONNECTION (Connected with your URL)
-    const MASTER_API_URL = "https://script.google.com/macros/s/AKfycboiKmqDdfRTuNglmjVouJwNILeDtPDV5qOXrTGhSzaN98-wTYldEpdSKJyeT-4Qb71/exec";
-    const SECRET_PIN = "9913";
-
-    function checkLogin() {
-        if(document.getElementById('adminPin').value === SECRET_PIN) {
-            document.getElementById('loginBox').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'block';
-        } else {
-            alert("❌ Galat PIN!");
-        }
-    }
+    // 🔗 CONNECTED TO YOUR DEPLOYED MASTER API
+    const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbwFxwq8ehYGUWEhhpf9dlPgzT6L9nBytL2kyhHfsHp2imbg69rz6vpxVibul1PenuaYiw/exec";
 
     async function submitData(actionType) {
         let payload = { action: actionType };
 
-        if(actionType == 'approve_user') {
+        if(actionType == 'add_content') {
+            payload.category = document.getElementById('iCat').value;
+            payload.itemName = document.getElementById('iName').value;
+            payload.fileId = document.getElementById('iID').value;
+            payload.type = document.getElementById('iType').value;
+            payload.price = document.getElementById('iPrice').value;
+        } else if(actionType == 'add_question') {
+            payload.ques = document.getElementById('qText').value;
+            payload.optA = document.getElementById('qA').value;
+            payload.optB = document.getElementById('qB').value;
+            payload.optC = document.getElementById('qC').value;
+            payload.optD = document.getElementById('qD').value;
+            payload.ans = document.getElementById('qAns').value;
+            payload.tag = document.getElementById('qTag').value;
+        } else if(actionType == 'approve_user') {
             payload.name = document.getElementById('uName').value;
             payload.mobile = document.getElementById('uMobile').value;
-            if(!payload.name || !payload.mobile) return alert("Details bhariye!");
-        } else if(actionType == 'add_test') {
-            payload.topic = document.getElementById('tTopic').value;
-            payload.testName = document.getElementById('tName').value;
-            payload.sheetId = document.getElementById('tID').value;
-            payload.type = document.getElementById('tType').value;
-            payload.price = document.getElementById('tPrice').value;
-            if(!payload.testName || !payload.sheetId) return alert("Details bhariye!");
-        } else if(actionType == 'add_pdf') {
-            payload.pdfName = document.getElementById('pName').value;
-            payload.pdfLink = document.getElementById('pLink').value;
-            payload.type = document.getElementById('pType').value;
-            payload.price = document.getElementById('tPrice').value;
-            if(!payload.pdfName || !payload.pLink) return alert("Details bhariye!");
+            payload.itemId = document.getElementById('uItemID').value;
         } else if(actionType == 'update_notif') {
             payload.message = document.getElementById('nMsg').value;
-            if(!payload.message) return alert("Message likhiye!");
         }
 
-        if(!confirm("Kya aap confirm hain?")) return;
-
+        if(!confirm("Kya aap is data ko Master Sheet mein bhejna chahte hain?")) return;
         document.getElementById('loading').style.display = 'flex';
 
         try {
@@ -130,7 +112,7 @@
             alert("Success: " + result);
             location.reload(); 
         } catch(e) {
-            alert("Error: Internet ya API check karein.");
+            alert("Error! Network check karein ya API link verify karein.");
             document.getElementById('loading').style.display = 'none';
         }
     }
