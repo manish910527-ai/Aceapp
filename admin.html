@@ -3,81 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Master Admin - Pro Control</title>
+    <title>Locked - ACE Admin</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
-        .header { background: #004a99; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #001a33; margin: 0; padding: 15px; color: white; }
+        
+        /* 🔒 LOGIN SCREEN - Sirf yahi dikhega pehle */
+        #loginBox { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 80vh; text-align: center; 
+        }
+        .login-card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: #333; }
+        input[type="password"] { width: 100%; padding: 15px; margin: 20px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 24px; text-align: center; letter-spacing: 10px; box-sizing: border-box; }
+        
+        /* 🎛️ DASHBOARD - Yeh default mein CHHUPA rahega */
+        #adminDashboard { display: none; background: #f0f2f5; min-height: 100vh; margin: -15px; padding: 15px; color: #333; }
+        
+        /* Baaki Purani Styles... */
+        .header { background: #004a99; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 0 0 15px 15px; margin-bottom: 20px; }
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 5px solid #004a99; }
-        h3 { color: #333; margin-top: 0; font-size: 16px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; background: #fafafa; }
-        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn:active { transform: scale(0.97); opacity: 0.9; }
-        #loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 1000; justify-content: center; align-items: center; font-weight: bold; color: #004a99; flex-direction: column; }
-        .hint { font-size: 11px; color: #d32f2f; font-weight: bold; margin-bottom: 5px; }
+        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; justify-content: center; align-items: center; font-weight: bold; color: #004a99; flex-direction: column; }
     </style>
 </head>
 <body>
 
-<div id="loading">
-    <div style="font-size: 40px;">⏳</div>
-    <div>Database Update Ho Raha Hai...</div>
+<div id="loading">⏳ Database Update Ho Raha Hai...</div>
+
+<div id="loginBox">
+    <div class="login-card">
+        <div style="font-size: 50px;">🛡️</div>
+        <h2 style="margin: 10px 0;">ACE Admin</h2>
+        <p style="font-size: 13px; color: #666;">Enter 4-Digit Secret PIN</p>
+        <input type="password" id="adminPin" placeholder="****" maxlength="4" inputmode="numeric">
+        <button class="btn" onclick="checkLogin()">UNLOCK SYSTEM</button>
+    </div>
+    <p style="margin-top: 20px; font-size: 12px; color: #5c7fa3;">Unauthorized access is prohibited.</p>
 </div>
 
-<div class="header">ACE HARDA MASTER ADMIN</div>
-
-<div class="container">
-
-    <div class="card" style="border-color: #1976d2;">
-        <h3>📂 Add Content (Test/PDF)</h3>
-        <p class="hint">Dhyan dein: 'Item Name' hi aapka Unique Tag hai.</p>
-        <input type="text" id="iCat" placeholder="Category (e.g. CPCT, MPTET)">
-        <input type="text" id="iName" placeholder="Item Name / Tag (e.g. CPCT_SET_1)">
-        <input type="text" id="iID" placeholder="Sheet ID (for Test) or Drive Link (for PDF)">
-        <select id="iType"><option value="Paid">Paid (Lock)</option><option value="Free">Free (Open)</option></select>
-        <input type="number" id="iPrice" placeholder="Price (₹)">
-        <button class="btn" style="background:#1976d2;" onclick="submitData('add_content')">ADD TO LIST</button>
-    </div>
-
-    <div class="card" style="border-color: #d32f2f;">
-        <h3>✍️ Add New Question</h3>
-        <input type="text" id="qText" placeholder="Enter Question">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <input type="text" id="qA" placeholder="Option A">
-            <input type="text" id="qB" placeholder="Option B">
-            <input type="text" id="qC" placeholder="Option C">
-            <input type="text" id="qD" placeholder="Option D">
+<div id="adminDashboard">
+    <div class="header">ACE MASTER CONTROL</div>
+    
+    <div class="container">
+        <div class="card" style="border-color: #1976d2;">
+            <h3 style="margin-top:0;">📂 Add Content (Test/PDF)</h3>
+            <input type="text" id="iCat" placeholder="Category (e.g. CPCT)">
+            <input type="text" id="iName" placeholder="Item Name / Tag">
+            <input type="text" id="iID" placeholder="Sheet ID / Drive Link">
+            <select id="iType"><option value="Paid">Paid</option><option value="Free">Free</option></select>
+            <input type="number" id="iPrice" placeholder="Price (₹)">
+            <button class="btn" style="background:#1976d2;" onclick="submitData('add_content')">ADD TO LIST</button>
         </div>
-        <select id="qAns"><option value="">Correct Answer?</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
-        <input type="text" id="qTag" placeholder="Question Tag (Same as Item Name)">
-        <button class="btn" style="background:#d32f2f;" onclick="submitData('add_question')">SAVE TO BANK</button>
+
+        <div class="card" style="border-color: #d32f2f;">
+            <h3 style="margin-top:0;">✍️ Add New Question</h3>
+            <input type="text" id="qText" placeholder="Enter Question">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <input type="text" id="qA" placeholder="A"><input type="text" id="qB" placeholder="B">
+                <input type="text" id="qC" placeholder="C"><input type="text" id="qD" placeholder="D">
+            </div>
+            <select id="qAns"><option value="">Correct Answer?</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+            <input type="text" id="qTag" placeholder="Question Tag">
+            <button class="btn" style="background:#d32f2f;" onclick="submitData('add_question')">SAVE TO BANK</button>
+        </div>
+
+        <div class="card" style="border-color: #2e7d32;">
+            <h3 style="margin-top:0;">✅ Unlock Specific Item</h3>
+            <input type="text" id="uName" placeholder="Student Name">
+            <input type="number" id="uMobile" placeholder="Mobile Number">
+            <input type="text" id="uItemID" placeholder="Item Tag (e.g. CPCT_SET_1)">
+            <button class="btn" style="background:#2e7d32;" onclick="submitData('approve_user')">UNLOCK NOW 🔒</button>
+        </div>
+
+        <button class="btn" style="background:#333; margin: 20px 0;" onclick="logout()">🔒 LOCK & EXIT</button>
     </div>
-
-    <div class="card" style="border-color: #2e7d32;">
-        <h3>✅ Unlock Item for Student</h3>
-        <p class="hint">Wahi Tag dalein jo student ne kharida hai.</p>
-        <input type="text" id="uName" placeholder="Student Name">
-        <input type="number" id="uMobile" placeholder="Student Mobile Number">
-        <input type="text" id="uItemID" placeholder="Item Tag to Unlock (e.g. CPCT_SET_1)">
-        <button class="btn" style="background:#2e7d32;" onclick="submitData('approve_user')">UNLOCK ACCESS 🔒</button>
-    </div>
-
-    <div class="card" style="border-color: #ff9800;">
-        <h3>📢 Notice Board Update</h3>
-        <input type="text" id="nMsg" placeholder="Type message for students...">
-        <button class="btn" style="background:#ff9800;" onclick="submitData('update_notif')">UPDATE NOTICE 🔔</button>
-    </div>
-
-    <button class="btn" style="background:#333; margin-bottom: 30px;" onclick="window.location.href='dashboard.html'">🏠 EXIT ADMIN</button>
-
 </div>
 
 <script>
-    // 🔗 CONNECTED TO YOUR DEPLOYED MASTER API
     const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbwFxwq8ehYGUWEhhpf9dlPgzT6L9nBytL2kyhHfsHp2imbg69rz6vpxVibul1PenuaYiw/exec";
+    const SECRET_PIN = "9913"; // <-- Ise aap badal sakte hain
 
+    // 🛡️ SECURITY CHECK: Page load hote hi check karein
+    window.onload = function() {
+        if(sessionStorage.getItem("isAceAdmin") === "true") {
+            showAdmin();
+        }
+    }
+
+    function checkLogin() {
+        let pin = document.getElementById('adminPin').value;
+        if(pin === SECRET_PIN) {
+            sessionStorage.setItem("isAceAdmin", "true");
+            showAdmin();
+        } else {
+            alert("❌ Access Denied! Galat PIN.");
+            document.getElementById('adminPin').value = "";
+        }
+    }
+
+    function showAdmin() {
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+        document.body.style.background = "#f0f2f5"; // UI color badal dein
+    }
+
+    function logout() {
+        sessionStorage.clear();
+        location.reload();
+    }
+
+    // --- Data Submission Logic (Purana Wala) ---
     async function submitData(actionType) {
         let payload = { action: actionType };
-
         if(actionType == 'add_content') {
             payload.category = document.getElementById('iCat').value;
             payload.itemName = document.getElementById('iName').value;
@@ -96,23 +132,18 @@
             payload.name = document.getElementById('uName').value;
             payload.mobile = document.getElementById('uMobile').value;
             payload.itemId = document.getElementById('uItemID').value;
-        } else if(actionType == 'update_notif') {
-            payload.message = document.getElementById('nMsg').value;
         }
 
-        if(!confirm("Kya aap is data ko Master Sheet mein bhejna chahte hain?")) return;
+        if(!confirm("Proceed with Update?")) return;
         document.getElementById('loading').style.display = 'flex';
 
         try {
-            let response = await fetch(MASTER_API_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
+            let response = await fetch(MASTER_API_URL, { method: 'POST', body: JSON.stringify(payload) });
             let result = await response.text();
             alert("Success: " + result);
             location.reload(); 
         } catch(e) {
-            alert("Error! Network check karein ya API link verify karein.");
+            alert("Error! Network check karein.");
             document.getElementById('loading').style.display = 'none';
         }
     }
