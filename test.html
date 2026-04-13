@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE Online Test</title>
+    <style>
+        body { font-family: Arial; background: #f0f2f5; margin: 0; }
+        .header { background: #004a99; color: white; padding: 15px; text-align: center; position: sticky; top: 0; }
+        .q-card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .opt { display: block; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px; cursor: pointer; }
+        .opt.selected { background: #e3f2fd; border-color: #004a99; font-weight: bold; }
+        .btn-row { display: flex; justify-content: space-around; padding: 20px; }
+        button { padding: 10px 25px; border-radius: 8px; border: none; background: #004a99; color: white; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header"><h3 id="tName">Loading...</h3><div id="timer">Time: 60:00</div></div>
+    <div id="qArea"></div>
+    <div class="btn-row">
+        <button onclick="prevQ()">PREV</button>
+        <button onclick="nextQ()" id="nBtn">NEXT</button>
+    </div>
+
+    <script>
+        const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
+        const tid = new URLSearchParams(window.location.search).get('testId');
+        let qs = [], idx = 0, ans = {};
+
+        window.onload = async () => {
+            document.getElementById('tName').innerText = tid;
+            try {
+                let res = await fetch(MASTER_URL + "?action=get_questions&testId=" + encodeURIComponent(tid));
+                qs = await res.json();
+                if(qs.length > 0) showQ(); else document.getElementById('qArea').innerHTML = "No questions found.";
+            } catch(e) { alert("Error loading questions!"); }
+        };
+
+        function showQ() {
+            let q = qs[idx];
+            let html = `<div class="q-card"><p><b>Q${idx+1}: ${q.ques}</b></p>`;
+            ['A','B','C','D'].forEach(o => {
+                let sel = ans[idx] === o ? 'selected' : '';
+                html += `<div class="opt ${sel}" onclick="selOpt('${o}')">${o}. ${q['opt'+o]}</div>`;
+            });
+            document.getElementById('qArea').innerHTML = html + "</div>";
+            document.getElementById('nBtn').innerText = idx === qs.length - 1 ? "SUBMIT" : "NEXT";
+        }
+
+        function selOpt(v) { ans[idx] = v; showQ(); }
+        function prevQ() { if(idx > 0) { idx--; showQ(); } }
+        function nextQ() { 
+            if(idx < qs.length - 1) { idx++; showQ(); } 
+            else { alert("Test Submitted!"); window.location.href = "dashboard.html"; }
+        }
+    </script>
+</body>
+</html>
