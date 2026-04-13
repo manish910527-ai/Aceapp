@@ -3,112 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Access - ACE HARDA</title>
+    <title>Payment - ACE HARDA</title>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background: #f0f4f7; padding-bottom: 30px; }
-        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; }
         .container { padding: 20px; }
-        
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; }
-        .card h2 { color: #b71c1c; margin-top: 0; font-size: 20px; font-weight: 900; }
-        .card p { color: #555; font-size: 14px; line-height: 1.5; }
-        
-        .qr-box { width: 220px; height: 220px; background: #eee; border: 2px dashed #004a99; margin: 15px auto; display: flex; justify-content: center; align-items: center; border-radius: 10px; overflow: hidden; position: relative; }
+        .item-name { color: #004a99; font-size: 18px; font-weight: bold; }
+        .price-tag { font-size: 35px; font-weight: 900; color: #d32f2f; margin: 10px 0; }
+        .qr-box { width: 200px; height: 200px; background: #eee; border: 2px dashed #004a99; margin: 15px auto; border-radius: 10px; overflow: hidden; }
         .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-        .upi-text { font-weight: bold; color: #004a99; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
-        
-        .btn { display: block; width: 100%; padding: 14px; border-radius: 8px; border: none; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; box-sizing: border-box; margin-bottom: 10px; color: white; text-align: center; }
+        .btn { display: block; width: 100%; padding: 14px; border-radius: 8px; border: none; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; color: white; text-align: center; margin-bottom: 10px; }
         .btn-wa { background-color: #25D366; }
-        .btn-wa:active { transform: scale(0.98); }
-        
         .activation-box { background: #fff3e0; padding: 20px; border-radius: 12px; border: 2px solid #ffb74d; text-align: center; }
-        .btn-activate { background-color: #004a99; margin-top: 10px; }
-        
-        #loadingMsg { display: none; color: #004a99; font-weight: bold; margin-top: 10px; font-size: 14px; }
-        
-        #premiumSuccess { display: none; background: #e8f5e9; padding: 30px 20px; border-radius: 12px; border: 2px solid #4caf50; text-align: center; color: #2e7d32; margin-top: 50px; }
-        .icon { font-size: 60px; display: block; margin-bottom: 10px; }
+        #loadingMsg { display: none; color: #004a99; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="header" onclick="window.location.href='dashboard.html'">
-    <span style="cursor:pointer;">⬅ ACE Premium Access</span>
+<div class="header" onclick="window.history.back()">
+    <span>⬅ Payment Checkout</span>
 </div>
 
 <div class="container">
-
-    <div id="paymentSection">
-        <div class="card">
-            <h2>UNLOCK ALL FEATURES</h2>
-            <p>CPCT, MPTET aur MP ASI ke premium test aur notes unlock karne ke liye QR code scan karke payment karein.</p>
-            
-            <div class="qr-box">
-                <img src="qr_code.png" alt="QR Code Payment">
-            </div>
-            
-            <div class="upi-text">UPI ID: aceharda@upi</div>
-            <a href="https://wa.me/919589769913?text=Sir, maine ACE Premium ka payment kar diya hai. Mera number verify kar dijiye." class="btn btn-wa">💬 Send Screenshot on WhatsApp</a>
-        </div>
-
-        <div class="activation-box">
-            <h3>Verify My Payment</h3>
-            <p style="font-size: 12px; color: #555;">Payment ke baad agar Sir ne aapka number sheet mein update kar diya hai, toh niche click karein:</p>
-            
-            <button class="btn btn-activate" onclick="verifyPayment()">VERIFY & UNLOCK 🔒</button>
-            <div id="loadingMsg">⏳ Database check ho raha hai...</div>
-        </div>
+    <div class="card">
+        <div class="item-name" id="itemName">Loading...</div>
+        <div class="price-tag">₹<span id="itemPrice">0</span></div>
+        <div class="qr-box"><img src="qr_code.png" alt="QR"></div>
+        <div style="font-weight:bold; color:#004a99; margin-bottom:15px;">UPI: aceharda@upi</div>
+        <a id="waLink" href="#" class="btn btn-wa">💬 Screenshot on WhatsApp</a>
     </div>
 
-    <div id="premiumSuccess">
-        <span class="icon">👑</span>
-        <h2>Premium Active!</h2>
-        <p>Aap Arithmetic Computer Education (ACE) ke premium member ban chuke hain. Saare courses unlock ho gaye hain.</p>
-        <button class="btn btn-activate" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+    <div class="activation-box">
+        <h3>Verify Payment</h3>
+        <p style="font-size: 12px; color: #555;">Sir ne update kar diya hai toh niche click karein:</p>
+        <button class="btn" style="background:#004a99;" onclick="verifyPayment()">VERIFY & UNLOCK 🔒</button>
+        <div id="loadingMsg">⏳ Checking Database...</div>
     </div>
-
 </div>
 
 <script>
-    // Aapka API Link bilkul same rakha hai
     const VERIFY_API_URL = "https://script.google.com/macros/s/AKfycbzrhrumEhzmnv1QeUFy-Gjku5HTCY3M9XN0C0iQ2zhreqn2CWsGzMfWjepELWpckO2r/exec";
 
     window.onload = function() {
-        if(localStorage.getItem("isPremiumUser") === "true") {
-            document.getElementById("paymentSection").style.display = "none";
-            document.getElementById("premiumSuccess").style.display = "block";
-        }
-    }
+        let name = localStorage.getItem("selectedItemName") || "ACE Premium";
+        let price = localStorage.getItem("selectedItemPrice") || "0";
+        document.getElementById("itemName").innerText = name;
+        document.getElementById("itemPrice").innerText = price;
+        let waMsg = "Sir, maine '" + name + "' ke liye ₹" + price + " ka payment kiya hai.";
+        document.getElementById("waLink").href = "https://wa.me/919589769913?text=" + encodeURIComponent(waMsg);
+    };
 
     async function verifyPayment() {
-        let userMobile = localStorage.getItem("userMobile"); 
-        
-        if(!userMobile) {
-            alert("Error: Mobile number nahi mila. Kripya app login karein.");
-            return;
-        }
+        let userMobile = localStorage.getItem("userMobile");
+        let itemName = localStorage.getItem("selectedItemName");
 
-        document.getElementById("loadingMsg").style.display = "block"; 
-        
+        if(!userMobile) return alert("Mobile number error!");
+        document.getElementById("loadingMsg").style.display = "block";
+
         try {
             let response = await fetch(VERIFY_API_URL + "?mobile=" + userMobile);
             let result = await response.json();
-            
             document.getElementById("loadingMsg").style.display = "none";
 
             if(result.premium === true) {
-                localStorage.setItem("isPremiumUser", "true");
-                alert("🎉 Success! Aapka account unlock ho gaya hai.");
-                window.location.reload(); 
+                // 🟢 UNLOCK ONLY THIS SPECIFIC ITEM
+                localStorage.setItem("unlocked_" + itemName, "true");
+                alert("🎉 Success! '" + itemName + "' unlock ho gaya hai.");
+                window.history.back(); 
             } else {
-                alert("❌ Verification Failed! Sir ne abhi aapka number update nahi kiya hai. WhatsApp par message karein.");
+                alert("❌ Verification Failed! Sir se sampark karein.");
             }
-        } catch(error) {
+        } catch(e) {
             document.getElementById("loadingMsg").style.display = "none";
-            alert("Internet error! Kripya check karein.");
+            alert("Network Error!");
         }
     }
 </script>
-
 </body>
 </html>
