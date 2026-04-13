@@ -7,7 +7,7 @@
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f7f9; padding-bottom: 20px; overflow-x: hidden; }
         
-        /* ☰ SIDEBAR (MENU BAR) STYLES ☰ */
+        /* ☰ SIDEBAR STYLES */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.3); z-index: 1000; transition: 0.4s; overflow-y: auto; }
         .sidebar.active { left: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
@@ -16,7 +16,6 @@
         .sidebar-header { background: #004a99; color: white; padding: 30px 20px; text-align: center; }
         .sidebar-header img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #ffca28; margin-bottom: 10px; background: white; }
         .sidebar-header h3 { margin: 0; font-size: 18px; text-transform: capitalize; }
-        .sidebar-header p { margin: 5px 0 0; font-size: 13px; opacity: 0.8; }
         
         .sidebar-menu { padding: 15px 0; }
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; text-decoration: none; font-weight: bold; font-size: 15px; border-bottom: 1px solid #eee; }
@@ -24,25 +23,33 @@
         .menu-item .m-icon { margin-right: 15px; font-size: 20px; }
         .logout-menu { color: #d32f2f; border-bottom: none; }
 
-        /* Dashboard Top Bar */
+        /* App Bar */
         .app-bar { background-color: #004a99; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .app-bar .icons { font-size: 22px; cursor: pointer; }
-        .app-bar-title { font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+        .app-bar-title { font-weight: bold; font-size: 16px; letter-spacing: 0.5px; }
         
         /* Banner */
         .banner-container { margin: 10px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); border: 2px solid white; }
         .banner-container img { width: 100%; display: block; height: auto; }
         
-        /* Grid Menu Buttons */
+        /* Grid Menu */
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .menu-btn { border: 2px solid #ffca28; border-radius: 12px; color: white; text-align: center; padding: 18px 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .menu-btn { border: 2px solid #ffca28; border-radius: 12px; color: white; text-align: center; padding: 20px 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .menu-btn:active { transform: scale(0.95); } 
-        .menu-btn .icon { font-size: 32px; margin-bottom: 8px; display: block; }
-        .menu-btn .text { font-size: 13px; font-weight: bold; line-height: 1.3; }
+        .menu-btn .icon { font-size: 30px; margin-bottom: 8px; }
+        .menu-btn .text { font-size: 13px; font-weight: bold; }
         
-        /* Bottom Info Banner */
+        /* Notification Modal */
+        .notif-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center; padding: 20px; }
+        .notif-content { background: white; width: 100%; max-width: 300px; border-radius: 15px; padding: 20px; text-align: center; position: relative; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .notif-content h3 { color: #004a99; margin-top: 0; }
+        .notif-text { color: #333; font-size: 14px; line-height: 1.5; font-weight: bold; min-height: 50px; }
+        .close-notif { background: #d32f2f; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; font-weight: bold; }
+
+        /* Footer */
         .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 15px 10px; padding: 15px; border-radius: 10px; color: black; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .address-bar { background: #212121; color: white; text-align: center; padding: 8px; font-size: 12px; margin-top: 15px; border-radius: 5px; font-weight: bold; text-transform: uppercase; }
+        .address-bar { background: #212121; color: white; text-align: center; padding: 8px; font-size: 11px; margin-top: 15px; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -51,7 +58,7 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <img src="logo.png" alt="ACE Logo">
-            <h3 id="sideUserName">Student Name</h3>
+            <h3 id="sideUserName">Student</h3>
             <p>ACE Academy Member</p>
         </div>
         <div class="sidebar-menu">
@@ -60,15 +67,15 @@
             <a href="pdf_list.html" class="menu-item"><span class="m-icon">📚</span> PDF Notes</a>
             <a href="result.html" class="menu-item"><span class="m-icon">🏆</span> My Results</a>
             <a href="payment.html" class="menu-item"><span class="m-icon">💳</span> Buy Premium</a>
-            <a href="https://wa.me/919589769913" class="menu-item"><span class="m-icon">💬</span> WhatsApp Support</a>
+            <a href="https://wa.me/919589769913" class="menu-item"><span class="m-icon">💬</span> Support</a>
             <a href="#" onclick="logoutApp()" class="menu-item logout-menu"><span class="m-icon">⏻</span> Logout</a>
         </div>
     </div>
 
     <div class="app-bar">
         <div class="icons" onclick="openMenu()">☰</div>
-        <div class="app-bar-title">ARTHMETIC</div>
-        <div class="icons" onclick="alert('No new notifications')">🔔</div>
+        <div class="app-bar-title">ARITHMETIC COMPUTER EDUCATION</div>
+        <div class="icons" onclick="showNotification()">🔔</div>
     </div>
 
     <div class="banner-container">
@@ -77,41 +84,41 @@
 
     <div class="grid-container">
         
-        <div class="menu-btn" style="background-color: #7b1fa2;" onclick="window.location.href='test_list.html'">
-            <span class="icon">📝</span>
-            <span class="text">Online Exam</span>
-        </div>
-        
-        <div class="menu-btn" style="background-color: #303f9f;" onclick="window.location.href='test_list.html'">
-            <span class="icon">📊</span>
-            <span class="text">Test Series</span>
+        <div class="menu-btn" style="background-color: #1976d2;" onclick="window.location.href='payment.html'">
+            <span class="icon">🎓</span>
+            <span class="text">Course</span>
         </div>
 
         <div class="menu-btn" style="background-color: #00796b;" onclick="window.location.href='test_list.html'">
             <span class="icon">⏱️</span>
-            <span class="text">Daily Quiz</span>
+            <span class="text">Quiz</span>
         </div>
-        
-        <div class="menu-btn" style="background-color: #e64a19;" onclick="window.location.href='pdf_list.html'">
-            <span class="icon">📚</span>
-            <span class="text">PDF Notes</span>
+
+        <div class="menu-btn" style="background-color: #303f9f;" onclick="window.location.href='test_list.html'">
+            <span class="icon">📊</span>
+            <span class="text">Test Series</span>
         </div>
 
         <div class="menu-btn" style="background-color: #5d4037;" onclick="window.location.href='pdf_list.html'">
             <span class="icon">⏳</span>
             <span class="text">Previous Year</span>
         </div>
-        
-        <div class="menu-btn" style="background-color: #1976d2;" onclick="window.location.href='payment.html'">
-            <span class="icon">🎓</span>
-            <span class="text">All Courses</span>
-        </div>
 
         <div class="menu-btn" style="background-color: #c62828;" onclick="window.location.href='payment.html'">
             <span class="icon">🛒</span>
             <span class="text">Buy CPCT Course</span>
         </div>
-        
+
+        <div class="menu-btn" style="background-color: #e64a19;" onclick="window.location.href='pdf_list.html'">
+            <span class="icon">📚</span>
+            <span class="text">Pdf Notes</span>
+        </div>
+
+        <div class="menu-btn" style="background-color: #7b1fa2;" onclick="window.location.href='test_list.html'">
+            <span class="icon">📝</span>
+            <span class="text">Online Exam</span>
+        </div>
+
         <div class="menu-btn" style="background-color: #2e7d32;" onclick="window.location.href='result.html'">
             <span class="icon">🏆</span>
             <span class="text">My Result</span>
@@ -119,20 +126,44 @@
         
     </div>
 
+    <div class="notif-modal" id="notifModal">
+        <div class="notif-content">
+            <div style="font-size: 35px; margin-bottom: 10px;">🔔</div>
+            <h3>New Notification</h3>
+            <p id="notifText" class="notif-text">Loading message...</p>
+            <button class="close-notif" onclick="document.getElementById('notifModal').style.display='none'">CLOSE</button>
+        </div>
+    </div>
+
     <div class="bottom-banner">
         <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 10px;">
-            <h2 style="margin: 0; color: #b71c1c; font-weight: 900;">ACE HARDA</h2>
-            <div style="text-align: right; font-weight: bold;">📞 95897-69913</div>
+            <h2 style="margin: 0; font-size: 16px; font-weight: 900;">ACE HARDA</h2>
+            <div style="font-weight: bold;">📞 95897-69913</div>
         </div>
-        <p style="margin: 0; font-weight: bold; line-height: 1.6;">Computer Courses • CPCT • Tally • MP ASI • MPTET • Special Batches</p>
+        <p style="margin: 0; font-weight: bold; line-height: 1.4;">Computer Courses • CPCT • Tally • MP ASI • MPTET</p>
         <div class="address-bar">📍 Harda, Madhya Pradesh</div>
     </div>
 
     <script>
+        // Notification API Link
+        const NOTIF_API_URL = "https://script.google.com/macros/s/AKfycbxOoaTHd3dRjcnnQJ55HEPIPecf8T6n_12uTKeNEHD1X6_HF4whBm0KYVqt_Bzti0p2uQ/exec";
+
         window.onload = function() {
             let userName = localStorage.getItem("userName") || "Student";
             document.getElementById("sideUserName").innerText = userName;
         };
+
+        async function showNotification() {
+            document.getElementById('notifModal').style.display = 'flex';
+            document.getElementById('notifText').innerText = "⏳ Checking for updates...";
+            try {
+                let response = await fetch(NOTIF_API_URL);
+                let data = await response.json();
+                document.getElementById('notifText').innerText = data.message;
+            } catch(error) {
+                document.getElementById('notifText').innerText = "⚠️ Network error! Check back later.";
+            }
+        }
 
         function openMenu() {
             document.getElementById("sidebar").classList.add("active");
@@ -145,12 +176,12 @@
         }
 
         function logoutApp() {
-            if(confirm("Logout karna chahte hain?")) {
+            if(confirm("Logout?")) {
                 localStorage.clear(); 
                 window.location.href = "index.html";
             }
         }
     </script>
-
 </body>
-</html>
+    </html>
+    
