@@ -53,6 +53,12 @@
         /* Footer */
         .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 15px 10px; padding: 15px; border-radius: 10px; color: black; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .address-bar { background: #212121; color: white; text-align: center; padding: 8px; font-size: 11px; margin-top: 15px; border-radius: 5px; font-weight: bold; }
+
+        /* NAYE STYLE ADD KIYE HAIN FOLDERS KE LIYE */
+        #dynamicView { display: none; padding: 10px; }
+        .back-nav { background: #333; color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .item-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #004a99; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .open-btn { background: #004a99; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -60,59 +66,71 @@
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="logo.png" alt="ACE Logo">
+            <img src="logo.png" alt="ACE Logo" onerror="this.src='https://via.placeholder.com/70'">
             <h3 id="sideUserName">Student</h3>
             <p>ACE Academy Member</p>
         </div>
         <div class="sidebar-menu">
-            <a href="dashboard.html" class="menu-item"><span class="m-icon">🏠</span> Home</a>
-            <a href="test_list.html" class="menu-item"><span class="m-icon">📝</span> My Tests</a>
-            <a href="pdf_list.html" class="menu-item"><span class="m-icon">📚</span> PDF Notes</a>
-            <a href="result.html" class="menu-item"><span class="m-icon">🏆</span> My Results</a>
+            <a href="#" onclick="showHome()" class="menu-item"><span class="m-icon">🏠</span> Home</a>
             <a href="payment.html" class="menu-item"><span class="m-icon">💳</span> Buy Premium</a>
             <a href="https://wa.me/919589769913" class="menu-item"><span class="m-icon">💬</span> Support</a>
-            
             <a href="admin.html" class="menu-item admin-menu"><span class="m-icon">⚙️</span> Admin Panel</a>
-
             <a href="#" onclick="logoutApp()" class="menu-item logout-menu"><span class="m-icon">⏻</span> Logout</a>
         </div>
     </div>
 
     <div class="app-bar">
         <div class="icons" onclick="openMenu()">☰</div>
-        <div class="app-bar-title">ARITHMETIC COMPUTER EDUCATION</div>
+        <div class="app-bar-title" id="topTitle">ARITHMETIC COMPUTER EDUCATION</div>
         <div class="icons" style="text-align: right;" onclick="showNotification()">🔔</div>
     </div>
 
-    <div class="banner-container">
-        <img src="banner.png" alt="ACE Banner">
+    <div id="homeView">
+        <div class="banner-container">
+            <img src="banner.png" alt="ACE Banner" onerror="this.src='https://via.placeholder.com/600x200?text=ACE+HARDA'">
+        </div>
+
+        <div class="grid-container">
+            <div class="menu-btn" style="background-color: #1976d2;" onclick="openSection('Course')">
+                <span class="icon">🎓</span><span class="text">Course</span>
+            </div>
+            <div class="menu-btn" style="background-color: #00796b;" onclick="openSection('Quiz')">
+                <span class="icon">⏱️</span><span class="text">Quiz</span>
+            </div>
+            <div class="menu-btn" style="background-color: #303f9f;" onclick="openSection('Test Series')">
+                <span class="icon">📊</span><span class="text">Test Series</span>
+            </div>
+            <div class="menu-btn" style="background-color: #5d4037;" onclick="openSection('Previous Year')">
+                <span class="icon">⏳</span><span class="text">Previous Year</span>
+            </div>
+            <div class="menu-btn" style="background-color: #c62828;" onclick="window.location.href='payment.html'">
+                <span class="icon">🛒</span><span class="text">Buy CPCT Course</span>
+            </div>
+            <div class="menu-btn" style="background-color: #e64a19;" onclick="openSection('PDF Notes')">
+                <span class="icon">📚</span><span class="text">Pdf Notes</span>
+            </div>
+            <div class="menu-btn" style="background-color: #7b1fa2;" onclick="openSection('Online Exam')">
+                <span class="icon">📝</span><span class="text">Online Exam</span>
+            </div>
+            <div class="menu-btn" style="background-color: #2e7d32;" onclick="window.location.href='result.html'">
+                <span class="icon">🏆</span><span class="text">My Result</span>
+            </div>
+        </div>
+        
+        <div class="bottom-banner">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 10px;">
+                <h2 style="margin: 0; font-size: 16px; font-weight: 900;">ACE HARDA</h2>
+                <div style="font-weight: bold;">📞 95897-69913</div>
+            </div>
+            <p style="margin: 0; font-weight: bold; line-height: 1.4;">Computer Courses • CPCT • Tally • MP ASI • MPTET</p>
+            <div class="address-bar">📍 Harda, Madhya Pradesh</div>
+        </div>
     </div>
 
-    <div class="grid-container">
-        <div class="menu-btn" style="background-color: #1976d2;" onclick="window.location.href='payment.html'">
-            <span class="icon">🎓</span><span class="text">Course</span>
-        </div>
-        <div class="menu-btn" style="background-color: #00796b;" onclick="window.location.href='test_list.html'">
-            <span class="icon">⏱️</span><span class="text">Quiz</span>
-        </div>
-        <div class="menu-btn" style="background-color: #303f9f;" onclick="window.location.href='test_list.html'">
-            <span class="icon">📊</span><span class="text">Test Series</span>
-        </div>
-        <div class="menu-btn" style="background-color: #5d4037;" onclick="window.location.href='pdf_list.html'">
-            <span class="icon">⏳</span><span class="text">Previous Year</span>
-        </div>
-        <div class="menu-btn" style="background-color: #c62828;" onclick="window.location.href='payment.html'">
-            <span class="icon">🛒</span><span class="text">Buy CPCT Course</span>
-        </div>
-        <div class="menu-btn" style="background-color: #e64a19;" onclick="window.location.href='pdf_list.html'">
-            <span class="icon">📚</span><span class="text">Pdf Notes</span>
-        </div>
-        <div class="menu-btn" style="background-color: #7b1fa2;" onclick="window.location.href='test_list.html'">
-            <span class="icon">📝</span><span class="text">Online Exam</span>
-        </div>
-        <div class="menu-btn" style="background-color: #2e7d32;" onclick="window.location.href='result.html'">
-            <span class="icon">🏆</span><span class="text">My Result</span>
-        </div>
+    <div id="dynamicView">
+        <div class="back-nav" id="backBtn" onclick="showHome()">⬅ GO BACK</div>
+        <div class="grid-container" id="dynamicGrid"></div>
+        <div id="dynamicList"></div>
     </div>
 
     <div class="notif-modal" id="notifModal">
@@ -124,23 +142,127 @@
         </div>
     </div>
 
-    <div class="bottom-banner">
-        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 10px;">
-            <h2 style="margin: 0; font-size: 16px; font-weight: 900;">ACE HARDA</h2>
-            <div style="font-weight: bold;">📞 95897-69913</div>
-        </div>
-        <p style="margin: 0; font-weight: bold; line-height: 1.4;">Computer Courses • CPCT • Tally • MP ASI • MPTET</p>
-        <div class="address-bar">📍 Harda, Madhya Pradesh</div>
-    </div>
-
     <script>
+        // AAPKA GOOGLE SHEET API URL
+        const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbx6_f_NRB4GQcXUBSNEkFzJl7OGFMHqjTkV92XYpJn5ruXwQxgghYIEVZd3F2YU39pgkg/exec";
         const NOTIF_API_URL = "https://script.google.com/macros/s/AKfycbxOoaTHd3dRjcnnQJ55HEPIPecf8T6n_12uTKeNEHD1X6_HF4whBm0KYVqt_Bzti0p2uQ/exec";
+        
+        let allContent = [];
 
         window.onload = function() {
             let userName = localStorage.getItem("userName") || "Student";
             document.getElementById("sideUserName").innerText = userName;
+            // Background mein data load kar lo
+            fetchData();
         };
 
+        async function fetchData() {
+            try {
+                let response = await fetch(MASTER_API_URL);
+                allContent = await response.json();
+            } catch(error) {
+                console.log("Error loading data from Google Sheet");
+            }
+        }
+
+        // --- UI NAVIGATION LOGIC ---
+
+        function showHome() {
+            document.getElementById("homeView").style.display = "block";
+            document.getElementById("dynamicView").style.display = "none";
+            document.getElementById("topTitle").innerText = "ARITHMETIC COMPUTER EDUCATION";
+        }
+
+        // Step 1: Show Subjects (CPCT, Tally, Basic Computer)
+        function openSection(sectionName) {
+            document.getElementById("homeView").style.display = "none";
+            document.getElementById("dynamicView").style.display = "block";
+            document.getElementById("dynamicList").innerHTML = ""; // Clear list
+            document.getElementById("topTitle").innerText = sectionName;
+            
+            document.getElementById("backBtn").onclick = showHome;
+
+            // Sheet se data filter karein
+            const filtered = allContent.filter(item => item.Main_Section === sectionName);
+            const folders = [...new Set(filtered.map(item => item.Sub_Folder))].filter(Boolean);
+
+            let html = "";
+            let colors = ['#00796b', '#303f9f', '#c62828', '#e64a19', '#7b1fa2']; // Aapke theme colors
+
+            if(folders.length === 0) {
+                html = "<p style='text-align:center; padding:20px; font-weight:bold; width: 100%; grid-column: span 2;'>Data aa raha hai, kripya intezar karein ya Admin se update karwayein.</p>";
+            } else {
+                folders.forEach((folder, index) => {
+                    let color = colors[index % colors.length];
+                    html += `
+                    <div class="menu-btn" style="background-color: ${color};" onclick="openFolder('${sectionName}', '${folder}')">
+                        <span class="icon">📁</span>
+                        <span class="text">${folder}</span>
+                    </div>`;
+                });
+            }
+            document.getElementById("dynamicGrid").innerHTML = html;
+        }
+
+        // Step 2: Show Material Type (PDF / Test)
+        function openFolder(sectionName, folderName) {
+            document.getElementById("backBtn").onclick = () => openSection(sectionName);
+            document.getElementById("topTitle").innerText = folderName;
+
+            const filtered = allContent.filter(item => item.Main_Section === sectionName && item.Sub_Folder === folderName);
+            const types = [...new Set(filtered.map(item => item.Material_Type))].filter(Boolean);
+
+            let html = "";
+            types.forEach(type => {
+                let color = type === 'Test' ? '#d32f2f' : '#1976d2';
+                let icon = type === 'Test' ? '✍️' : '📚';
+                html += `
+                <div class="menu-btn" style="background-color: ${color};" onclick="openItems('${sectionName}', '${folderName}', '${type}')">
+                    <span class="icon">${icon}</span>
+                    <span class="text">${type}</span>
+                </div>`;
+            });
+            document.getElementById("dynamicGrid").innerHTML = html;
+        }
+
+        // Step 3: Show Final List of Items (PDFs / Tests)
+        function openItems(sectionName, folderName, typeName) {
+            document.getElementById("backBtn").onclick = () => openFolder(sectionName, folderName);
+            document.getElementById("topTitle").innerText = typeName;
+            document.getElementById("dynamicGrid").innerHTML = ""; // Hide Grid
+
+            const items = allContent.filter(item => item.Main_Section === sectionName && item.Sub_Folder === folderName && item.Material_Type === typeName);
+
+            let html = "";
+            items.forEach(item => {
+                let isPaid = item.Access_Type === "Paid";
+                let badgeColor = isPaid ? "red" : "green";
+                let badgeText = isPaid ? "🔒 Paid (₹"+item.Price+")" : "🔓 Free";
+                
+                html += `
+                <div class="item-card">
+                    <div>
+                        <b style="font-size:15px;">${item.Item_Name_Tag}</b><br>
+                        <span style="font-size:12px; color:${badgeColor}; font-weight:bold;">${badgeText}</span>
+                    </div>
+                    <button class="open-btn" style="background-color:${isPaid ? '#444' : '#004a99'}" onclick="handleContent('${item.Item_Name_Tag}', '${item.Link_or_ID}', '${item.Access_Type}')">
+                        ${isPaid ? 'BUY' : 'OPEN'}
+                    </button>
+                </div>`;
+            });
+            document.getElementById("dynamicList").innerHTML = html;
+        }
+
+        function handleContent(tag, link, access) {
+            if(access === "Free") {
+                alert("Opening: " + tag);
+                // Yahan apna logic dalenge (e.g., window.location.href = "quiz.html?id=" + tag)
+            } else {
+                alert("Yeh material paid hai. Kripya access ke liye admin se sampark karein.");
+            }
+        }
+
+        // --- NOTIFICATION & SIDEBAR STUFF ---
         async function showNotification() {
             document.getElementById('notifModal').style.display = 'flex';
             document.getElementById('notifText').innerText = "⏳ Checking for updates...";
@@ -153,22 +275,9 @@
             }
         }
 
-        function openMenu() {
-            document.getElementById("sidebar").classList.add("active");
-            document.getElementById("overlay").classList.add("active");
-        }
-
-        function closeMenu() {
-            document.getElementById("sidebar").classList.remove("active");
-            document.getElementById("overlay").classList.remove("active");
-        }
-
-        function logoutApp() {
-            if(confirm("Logout?")) {
-                localStorage.clear(); 
-                window.location.href = "index.html";
-            }
-        }
+        function openMenu() { document.getElementById("sidebar").classList.add("active"); document.getElementById("overlay").classList.add("active"); }
+        function closeMenu() { document.getElementById("sidebar").classList.remove("active"); document.getElementById("overlay").classList.remove("active"); }
+        function logoutApp() { if(confirm("Logout?")) { localStorage.clear(); window.location.href = "index.html"; } }
     </script>
 </body>
 </html>
