@@ -23,10 +23,10 @@
         .menu-item .m-icon { margin-right: 15px; font-size: 20px; }
         .logout-menu { color: #d32f2f; border-bottom: none; }
 
-        /* App Bar */
-        .app-bar { background-color: #004a99; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .app-bar .icons { font-size: 22px; cursor: pointer; }
-        .app-bar-title { font-weight: bold; font-size: 16px; letter-spacing: 0.5px; }
+        /* ✅ UPDATED APP BAR FOR CENTERING */
+        .app-bar { background-color: #004a99; color: white; padding: 12px 10px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .app-bar .icons { font-size: 22px; cursor: pointer; width: 35px; } /* Fixed width for icons to balance center */
+        .app-bar-title { flex: 1; text-align: center; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; }
         
         /* Banner */
         .banner-container { margin: 10px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); border: 2px solid white; }
@@ -75,7 +75,7 @@
     <div class="app-bar">
         <div class="icons" onclick="openMenu()">☰</div>
         <div class="app-bar-title">ARITHMETIC COMPUTER EDUCATION</div>
-        <div class="icons" onclick="showNotification()">🔔</div>
+        <div class="icons" style="text-align: right;" onclick="showNotification()">🔔</div>
     </div>
 
     <div class="banner-container">
@@ -83,47 +83,30 @@
     </div>
 
     <div class="grid-container">
-        
         <div class="menu-btn" style="background-color: #1976d2;" onclick="window.location.href='payment.html'">
-            <span class="icon">🎓</span>
-            <span class="text">Course</span>
+            <span class="icon">🎓</span><span class="text">Course</span>
         </div>
-
         <div class="menu-btn" style="background-color: #00796b;" onclick="window.location.href='test_list.html'">
-            <span class="icon">⏱️</span>
-            <span class="text">Quiz</span>
+            <span class="icon">⏱️</span><span class="text">Quiz</span>
         </div>
-
         <div class="menu-btn" style="background-color: #303f9f;" onclick="window.location.href='test_list.html'">
-            <span class="icon">📊</span>
-            <span class="text">Test Series</span>
+            <span class="icon">📊</span><span class="text">Test Series</span>
         </div>
-
         <div class="menu-btn" style="background-color: #5d4037;" onclick="window.location.href='pdf_list.html'">
-            <span class="icon">⏳</span>
-            <span class="text">Previous Year</span>
+            <span class="icon">⏳</span><span class="text">Previous Year</span>
         </div>
-
         <div class="menu-btn" style="background-color: #c62828;" onclick="window.location.href='payment.html'">
-            <span class="icon">🛒</span>
-            <span class="text">Buy CPCT Course</span>
+            <span class="icon">🛒</span><span class="text">Buy CPCT Course</span>
         </div>
-
         <div class="menu-btn" style="background-color: #e64a19;" onclick="window.location.href='pdf_list.html'">
-            <span class="icon">📚</span>
-            <span class="text">Pdf Notes</span>
+            <span class="icon">📚</span><span class="text">Pdf Notes</span>
         </div>
-
         <div class="menu-btn" style="background-color: #7b1fa2;" onclick="window.location.href='test_list.html'">
-            <span class="icon">📝</span>
-            <span class="text">Online Exam</span>
+            <span class="icon">📝</span><span class="text">Online Exam</span>
         </div>
-
         <div class="menu-btn" style="background-color: #2e7d32;" onclick="window.location.href='result.html'">
-            <span class="icon">🏆</span>
-            <span class="text">My Result</span>
+            <span class="icon">🏆</span><span class="text">My Result</span>
         </div>
-        
     </div>
 
     <div class="notif-modal" id="notifModal">
@@ -145,7 +128,6 @@
     </div>
 
     <script>
-        // Notification API Link
         const NOTIF_API_URL = "https://script.google.com/macros/s/AKfycbxOoaTHd3dRjcnnQJ55HEPIPecf8T6n_12uTKeNEHD1X6_HF4whBm0KYVqt_Bzti0p2uQ/exec";
 
         window.onload = function() {
@@ -183,5 +165,4 @@
         }
     </script>
 </body>
-    </html>
-    
+</html>
