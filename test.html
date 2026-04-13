@@ -1,272 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mock Test - ARTHMETIC</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE Online Test</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f7f9; }
-        
-        /* Header */
-        .header { background-color: #004a99; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .back-btn { cursor: pointer; font-weight: bold; font-size: 16px; }
-        .timer { font-size: 18px; font-weight: bold; background: #ffca28; color: #b71c1c; padding: 5px 10px; border-radius: 5px; }
-        
-        /* Layout container */
-        .container { display: flex; flex-direction: column; padding: 10px; gap: 10px; }
-        
-        /* Question Box */
-        .question-box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); flex: 1; min-height: 250px; }
-        .q-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #333; line-height: 1.4; }
-        
-        /* Options */
-        .option { display: block; background: #e9ecef; padding: 12px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer; font-size: 16px; }
-        .option input { margin-right: 10px; transform: scale(1.2); }
-        
-        /* Navigation Buttons */
-        .nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; }
-        .btn { padding: 10px 12px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .btn-prev { background: #6c757d; }
-        .btn-review { background: #7b1fa2; }
-        .btn-next { background: #28a745; }
-        
-        /* Question Palette */
-        .palette-box { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .palette-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: center; color: #004a99; }
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-        .q-btn { width: 100%; aspect-ratio: 1; border-radius: 50%; border: none; font-weight: bold; color: white; cursor: pointer; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        
-        /* Palette Colors */
-        .not-visited { background: #d3d3d3; color: black; } 
-        .not-answered { background: #ff4d4d; } 
-        .answered { background: #28a745; } 
-        .review { background: #7b1fa2; } 
-
-        /* Result Screen Styles */
-        .result-card { background: white; margin: 20px; padding: 30px 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center; }
-        .result-card h2 { color: #004a99; font-size: 24px; margin-bottom: 20px; text-transform: uppercase; }
-        .score-circle { width: 100px; height: 100px; border-radius: 50%; background: #ffca28; color: #b71c1c; display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; margin: 0 auto 20px; border: 5px solid #ff9800; }
-        .stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 16px; font-weight: bold; }
-        .stat-row.correct { color: #28a745; }
-        .stat-row.wrong { color: #dc3545; }
-        .home-btn { background: #004a99; color: white; border: none; padding: 15px 30px; font-size: 16px; border-radius: 8px; font-weight: bold; margin-top: 20px; width: 100%; cursor: pointer; }
+        body { font-family: Arial; background: #f0f2f5; margin: 0; }
+        .header { background: #004a99; color: white; padding: 15px; text-align: center; position: sticky; top: 0; }
+        .quiz-container { padding: 20px; max-width: 600px; margin: auto; }
+        .q-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .option { display: block; padding: 12px; border: 2px solid #ddd; border-radius: 10px; margin-top: 10px; cursor: pointer; }
+        .option.selected { border-color: #004a99; background: #e3f2fd; }
+        .btn-row { display: flex; justify-content: space-between; margin-top: 20px; }
+        .btn { padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        #timer { font-weight: bold; font-size: 18px; color: #ffca28; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="back-btn" onclick="window.location.href='dashboard.html'">⬅ Back</div>
-        <div class="timer" id="time">Loading...</div>
+<div class="header">
+    <div id="testName">Loading...</div>
+    <div id="timer">Time: 00:00</div>
+</div>
+
+<div class="quiz-container">
+    <div id="qArea">
+        <div class="q-card"><h3>Loading Questions...</h3></div>
     </div>
-
-    <div class="container" id="mainContainer">
-        <div class="question-box">
-            <div class="q-title" id="questionText">⏳ Internet se questions load ho rahe hain...</div>
-            <div id="optionsContainer">
-                </div>
-            
-            <div class="nav-buttons">
-                <button class="btn btn-prev" onclick="prevQuestion()">Previous</button>
-                <button class="btn btn-review" onclick="markReview()">Mark Review</button>
-                <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">Save & Next</button>
-            </div>
-        </div>
-
-        <div class="palette-box">
-            <div class="palette-title">Question Palette</div>
-            <div class="grid" id="paletteContainer">
-                </div>
-        </div>
+    
+    <div class="btn-row">
+        <button class="btn" style="background:#333; color:white;" onclick="prevQ()">PREVIOUS</button>
+        <button class="btn" id="nextBtn" style="background:#004a99; color:white;" onclick="nextQ()">NEXT</button>
     </div>
+</div>
 
-    <div id="resultContainer" style="display: none;">
-        <div class="result-card">
-            <h2>Test Completed!</h2>
-            <div class="score-circle">
-                <span id="resScore">0</span> / <span id="resTotalScore">0</span>
-            </div>
-            
-            <div class="stat-row">
-                <span>Total Questions:</span> <span id="resTotal">0</span>
-            </div>
-            <div class="stat-row">
-                <span>Attempted:</span> <span id="resAttempt">0</span>
-            </div>
-            <div class="stat-row correct">
-                <span>Correct Answers:</span> <span id="resCorrect">0</span>
-            </div>
-            <div class="stat-row wrong">
-                <span>Wrong Answers:</span> <span id="resWrong">0</span>
-            </div>
+<script>
+    const MASTER_URL = "APNA_NEW_DEPLOY_URL_YAHAN_DALEIN";
+    const urlParams = new URLSearchParams(window.location.search);
+    const testId = urlParams.get('testId');
+    
+    let questions = [];
+    let currentIdx = 0;
+    let answers = {};
+    let timeLeft = 3600; // 60 Minutes
 
-            <button class="home-btn" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
-        </div>
-    </div>
-
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwIlipqcFY3s0SCjUlqE5I2AGXAzr00UC-73445lgGnZRqCDKzUB_Hr2OEkHlhepYyi/exec";
-        
-        let quizData = [];
-        let currentQIndex = 0;
-        let userAnswers = []; 
-        let qStatus = []; 
-        let timeInSecs = 10 * 60; 
-        let timerInterval; // Timer ko rokne ke liye variable
-
-        async function fetchQuestions() {
-            try {
-                let response = await fetch(API_URL, { redirect: "follow" });
-                quizData = await response.json();
-
-                if(quizData && quizData.length > 0) {
-                    userAnswers = new Array(quizData.length).fill(null);
-                    qStatus = new Array(quizData.length).fill("not-visited");
-                    loadQuestion();
-                    startTimer(); 
-                } else {
-                    document.getElementById("questionText").innerText = "Database khaali hai! Google Sheet mein questions add karein.";
-                }
-            } catch(error) {
-                console.error(error);
-                document.getElementById("questionText").innerText = "⚠️ Error: Data load nahi ho paya. Internet check karein.";
-            }
-        }
-
-        function loadQuestion() {
-            if(!quizData || quizData.length === 0) return;
-
-            document.getElementById("questionText").innerText = "Q" + (currentQIndex + 1) + ". " + quizData[currentQIndex].q;
-            
-            let optionsHTML = "";
-            let opts = quizData[currentQIndex].options;
-            
-            for(let i = 0; i < opts.length; i++) {
-                if(opts[i] && opts[i].toString().trim() !== "") {
-                    let isChecked = userAnswers[currentQIndex] === i ? "checked" : "";
-                    optionsHTML += `<label class="option"><input type="radio" name="ans" onclick="selectAnswer(${i})" ${isChecked}> ${opts[i]}</label>`;
-                }
-            }
-            document.getElementById("optionsContainer").innerHTML = optionsHTML;
-
-            if(qStatus[currentQIndex] === "not-visited") {
-                qStatus[currentQIndex] = "not-answered";
-            }
-            updatePalette();
-
-            // SCRIPT MAGIC: Agar aakhri question hai toh button badal do
-            let nextButton = document.getElementById("nextBtn");
-            if(currentQIndex === quizData.length - 1) {
-                nextButton.innerText = "Submit Test";
-                nextButton.style.background = "#dc3545"; // Red color
-                nextButton.onclick = submitTest; // Click karne par test submit
+    window.onload = async () => {
+        document.getElementById('testName').innerText = testId;
+        try {
+            // API se sirf is Test ke sawal mangwana
+            let res = await fetch(MASTER_URL + "?action=get_questions&testId=" + encodeURIComponent(testId));
+            questions = await res.json();
+            if(questions.length > 0) {
+                showQuestion();
+                startTimer();
             } else {
-                nextButton.innerText = "Save & Next";
-                nextButton.style.background = "#28a745"; // Green color
-                nextButton.onclick = nextQuestion; // Click karne par next question
+                document.getElementById('qArea').innerHTML = "<h3>No questions found for this test.</h3>";
             }
+        } catch(e) { alert("Data Load Error!"); }
+    };
+
+    function startTimer() {
+        setInterval(() => {
+            if(timeLeft <= 0) submitTest();
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `Time: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            timeLeft--;
+        }, 1000);
+    }
+
+    function showQuestion() {
+        let q = questions[currentIdx];
+        let html = `
+            <div class="q-card">
+                <small>Question ${currentIdx + 1} of ${questions.length}</small>
+                <p style="font-size:18px; font-weight:bold;">${q.ques}</p>
+                <div class="option ${answers[currentIdx] === 'A' ? 'selected' : ''}" onclick="selectOpt('A')">A) ${q.optA}</div>
+                <div class="option ${answers[currentIdx] === 'B' ? 'selected' : ''}" onclick="selectOpt('B')">B) ${q.optB}</div>
+                <div class="option ${answers[currentIdx] === 'C' ? 'selected' : ''}" onclick="selectOpt('C')">C) ${q.optC}</div>
+                <div class="option ${answers[currentIdx] === 'D' ? 'selected' : ''}" onclick="selectOpt('D')">D) ${q.optD}</div>
+            </div>`;
+        document.getElementById('qArea').innerHTML = html;
+        document.getElementById('nextBtn').innerText = currentIdx === questions.length - 1 ? "SUBMIT" : "NEXT";
+    }
+
+    function selectOpt(val) {
+        answers[currentIdx] = val;
+        showQuestion();
+    }
+
+    function nextQ() {
+        if(currentIdx < questions.length - 1) {
+            currentIdx++;
+            showQuestion();
+        } else {
+            submitTest();
         }
+    }
 
-        function selectAnswer(index) {
-            userAnswers[currentQIndex] = index;
-            qStatus[currentQIndex] = "answered";
-            updatePalette();
+    function prevQ() {
+        if(currentIdx > 0) {
+            currentIdx--;
+            showQuestion();
         }
+    }
 
-        function nextQuestion() {
-            if (currentQIndex < quizData.length - 1) {
-                currentQIndex++;
-                loadQuestion();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentQIndex > 0) {
-                currentQIndex--;
-                loadQuestion();
-            }
-        }
-
-        function markReview() {
-            qStatus[currentQIndex] = "review";
-            if (currentQIndex < quizData.length - 1) {
-                nextQuestion();
-            }
-        }
-
-        function jumpToQuestion(index) {
-            currentQIndex = index;
-            loadQuestion();
-        }
-
-        function updatePalette() {
-            let paletteHTML = "";
-            for(let i = 0; i < quizData.length; i++) {
-                let extraStyle = (i === currentQIndex) ? "border: 3px solid #000; transform: scale(1.1);" : "";
-                paletteHTML += `<button class="q-btn ${qStatus[i]}" style="${extraStyle}" onclick="jumpToQuestion(${i})">${i+1}</button>`;
-            }
-            document.getElementById("paletteContainer").innerHTML = paletteHTML;
-        }
-
-        function startTimer() {
-            let timerElement = document.getElementById("time");
-            timerInterval = setInterval(function() {
-                if(timeInSecs <= 0) {
-                    clearInterval(timerInterval);
-                    timerElement.innerHTML = "Time Up!";
-                    alert("Samay samapt hua! Test auto-submit ho raha hai.");
-                    submitTest(); // Time khatam hone par auto-submit
-                    return; 
-                }
-                let m = Math.floor(timeInSecs / 60);
-                let s = timeInSecs % 60;
-                timerElement.innerHTML = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
-                timeInSecs--;
-            }, 1000);
-        }
-
-        // ==========================================
-        // 🔴 RESULT SYSTEM KI CODING YAHAN HAI 🔴
-        // ==========================================
-        function submitTest() {
-            clearInterval(timerInterval); // Timer rok do
-            
-            let correctCount = 0;
-            let wrongCount = 0;
-            let attemptedCount = 0;
-
-            for(let i = 0; i < quizData.length; i++) {
-                if(userAnswers[i] !== null) { // Agar attempt kiya hai
-                    attemptedCount++;
-                    // "==" use kiya hai taaki Google Sheet ka Text aur App ka Number match ho sake
-                    if(userAnswers[i] == quizData[i].ans) {
-                        correctCount++;
-                    } else {
-                        wrongCount++;
-                    }
-                }
-            }
-
-            // Main UI (Questions) ko chupao
-            document.getElementById("mainContainer").style.display = "none";
-            
-            // Result Screen ko dikhao
-            document.getElementById("resultContainer").style.display = "block";
-
-            // Data ko Screen par dalo
-            document.getElementById("resTotal").innerText = quizData.length;
-            document.getElementById("resAttempt").innerText = attemptedCount;
-            document.getElementById("resCorrect").innerText = correctCount;
-            document.getElementById("resWrong").innerText = wrongCount;
-            
-            document.getElementById("resScore").innerText = correctCount;
-            document.getElementById("resTotalScore").innerText = quizData.length;
-            
-            // Header timer hata do
-            document.getElementById("time").style.display = "none";
-        }
-
-        fetchQuestions();
-    </script>
-
+    function submitTest() {
+        let score = 0;
+        questions.forEach((q, i) => {
+            if(answers[i] === q.ans) score++;
+        });
+        alert(`Test Submitted!\nYour Score: ${score} / ${questions.length}`);
+        window.location.href = "dashboard.html";
+    }
+</script>
 </body>
 </html>
