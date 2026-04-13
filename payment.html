@@ -3,80 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Course - ARTHMETIC</title>
+    <title>Premium Access - ACE HARDA</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f7f9; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f0f4f7; padding-bottom: 30px; }
+        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .container { padding: 20px; }
         
-        /* Header */
-        .header { background-color: #004a99; color: white; padding: 15px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .back-btn { cursor: pointer; font-weight: bold; font-size: 16px; margin-right: 15px; }
-        .title { font-size: 18px; font-weight: bold; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; }
+        .card h2 { color: #b71c1c; margin-top: 0; font-size: 20px; font-weight: 900; }
+        .card p { color: #555; font-size: 14px; line-height: 1.5; }
         
-        /* Product Card */
-        .product-card { background: white; margin: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .product-image { background: linear-gradient(to right, #e65100, #ffca28); height: 150px; display: flex; justify-content: center; align-items: center; color: white; font-size: 50px; }
-        .product-details { padding: 20px; }
-        .product-title { font-size: 22px; font-weight: bold; color: #333; margin-bottom: 5px; }
-        .product-desc { font-size: 14px; color: #666; margin-bottom: 15px; line-height: 1.5; }
+        .qr-box { width: 220px; height: 220px; background: #eee; border: 2px dashed #004a99; margin: 15px auto; display: flex; justify-content: center; align-items: center; border-radius: 10px; overflow: hidden; position: relative; }
+        .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+        .upi-text { font-weight: bold; color: #004a99; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
         
-        /* Price Tag */
-        .price-box { display: flex; align-items: center; margin-bottom: 20px; }
-        .current-price { font-size: 28px; font-weight: bold; color: #d32f2f; margin-right: 10px; }
-        .old-price { font-size: 16px; color: #999; text-decoration: line-through; }
-        .discount { background: #4caf50; color: white; padding: 3px 8px; border-radius: 5px; font-size: 12px; font-weight: bold; margin-left: 10px; }
+        .btn { display: block; width: 100%; padding: 14px; border-radius: 8px; border: none; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; box-sizing: border-box; margin-bottom: 10px; color: white; text-align: center; }
+        .btn-wa { background-color: #25D366; }
+        .btn-wa:active { transform: scale(0.98); }
         
-        /* Payment Button */
-        .pay-btn { background: #28a745; color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .secure-text { text-align: center; font-size: 12px; color: #777; margin-top: 15px; font-weight: bold; }
+        .activation-box { background: #fff3e0; padding: 20px; border-radius: 12px; border: 2px solid #ffb74d; text-align: center; }
+        .btn-activate { background-color: #004a99; margin-top: 10px; }
+        
+        #loadingMsg { display: none; color: #004a99; font-weight: bold; margin-top: 10px; font-size: 14px; }
+        
+        #premiumSuccess { display: none; background: #e8f5e9; padding: 30px 20px; border-radius: 12px; border: 2px solid #4caf50; text-align: center; color: #2e7d32; margin-top: 50px; }
+        .icon { font-size: 60px; display: block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="back-btn" onclick="window.location.href='dashboard.html'">⬅</div>
-        <div class="title">Complete Payment</div>
-    </div>
+<div class="header" onclick="window.location.href='dashboard.html'">
+    <span style="cursor:pointer;">⬅ ACE Premium Access</span>
+</div>
 
-    <div class="product-card">
-        <div class="product-image">
-            🎓
+<div class="container">
+
+    <div id="paymentSection">
+        <div class="card">
+            <h2>UNLOCK ALL FEATURES</h2>
+            <p>CPCT, MPTET aur MP ASI ke premium test aur notes unlock karne ke liye QR code scan karke payment karein.</p>
+            
+            <div class="qr-box">
+                <img src="qr_code.png" alt="QR Code Payment">
+            </div>
+            
+            <div class="upi-text">UPI ID: aceharda@upi</div>
+            <a href="https://wa.me/919589769913?text=Sir, maine ACE Premium ka payment kar diya hai. Mera number verify kar dijiye." class="btn btn-wa">💬 Send Screenshot on WhatsApp</a>
         </div>
-        <div class="product-details">
-            <div class="product-title">MP CPCT Special Course</div>
-            <div class="product-desc">Full access to Mock Tests, PDF Notes, and Live Classes by ARTHMETIC COMPUTER EDUCATION Harda.</div>
-            
-            <div class="price-box">
-                <span class="current-price">₹99</span>
-                <span class="old-price">₹499</span>
-                <span class="discount">80% OFF</span>
-            </div>
 
-            <button class="pay-btn" onclick="payWithUPI()">
-                PAY NOW (₹99)
-            </button>
+        <div class="activation-box">
+            <h3>Verify My Payment</h3>
+            <p style="font-size: 12px; color: #555;">Payment ke baad agar Sir ne aapka number sheet mein update kar diya hai, toh niche click karein:</p>
             
-            <div class="secure-text">
-                ✅ Secure Transaction via UPI<br>
-                (GPay, PhonePe, Paytm, etc.)
-            </div>
+            <button class="btn btn-activate" onclick="verifyPayment()">VERIFY & UNLOCK 🔒</button>
+            <div id="loadingMsg">⏳ Database check ho raha hai...</div>
         </div>
     </div>
 
-    <script>
-        function payWithUPI() {
-            // Aapka Updated UPI ID
-            let upiId = "9589769913@ybl"; 
-            let payeeName = "ARTHMETIC COMPUTER EDUCATION"; 
-            let amount = "99.00"; 
-            let transactionNote = "CPCT Course Admission";
-            
-            // UPI Link Generation
-            let upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
-            
-            // App ko trigger karna
-            window.location.href = upiUrl;
+    <div id="premiumSuccess">
+        <span class="icon">👑</span>
+        <h2>Premium Active!</h2>
+        <p>Aap Arithmetic Computer Education (ACE) ke premium member ban chuke hain. Saare courses unlock ho gaye hain.</p>
+        <button class="btn btn-activate" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+    </div>
+
+</div>
+
+<script>
+    // Aapka API Link bilkul same rakha hai
+    const VERIFY_API_URL = "https://script.google.com/macros/s/AKfycbzrhrumEhzmnv1QeUFy-Gjku5HTCY3M9XN0C0iQ2zhreqn2CWsGzMfWjepELWpckO2r/exec";
+
+    window.onload = function() {
+        if(localStorage.getItem("isPremiumUser") === "true") {
+            document.getElementById("paymentSection").style.display = "none";
+            document.getElementById("premiumSuccess").style.display = "block";
         }
-    </script>
+    }
+
+    async function verifyPayment() {
+        let userMobile = localStorage.getItem("userMobile"); 
+        
+        if(!userMobile) {
+            alert("Error: Mobile number nahi mila. Kripya app login karein.");
+            return;
+        }
+
+        document.getElementById("loadingMsg").style.display = "block"; 
+        
+        try {
+            let response = await fetch(VERIFY_API_URL + "?mobile=" + userMobile);
+            let result = await response.json();
+            
+            document.getElementById("loadingMsg").style.display = "none";
+
+            if(result.premium === true) {
+                localStorage.setItem("isPremiumUser", "true");
+                alert("🎉 Success! Aapka account unlock ho gaya hai.");
+                window.location.reload(); 
+            } else {
+                alert("❌ Verification Failed! Sir ne abhi aapka number update nahi kiya hai. WhatsApp par message karein.");
+            }
+        } catch(error) {
+            document.getElementById("loadingMsg").style.display = "none";
+            alert("Internet error! Kripya check karein.");
+        }
+    }
+</script>
 
 </body>
 </html>
