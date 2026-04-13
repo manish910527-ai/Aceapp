@@ -3,117 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Tests - ACE</title>
+    <title>Online Tests - ACE HARDA</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f0f4f7; padding-bottom: 20px; }
-        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f7f9; padding-bottom: 20px; }
+        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; }
         .container { padding: 15px; }
-        
-        /* Topic Heading Style */
-        .topic-heading { 
-            background: #ffca28; color: #b71c1c; padding: 10px 15px; 
-            font-weight: 900; font-size: 14px; border-radius: 6px; 
-            margin: 20px 0 12px; text-transform: uppercase; 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 8px;
-        }
-        
-        /* Test Card Style */
-        .test-card { 
-            background: white; padding: 16px; margin-bottom: 12px; 
-            border-radius: 12px; display: flex; align-items: center; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.06); cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .test-card:active { transform: scale(0.97); }
-        .test-info { flex: 1; }
-        .test-name { font-weight: bold; color: #333; font-size: 15px; display: block; margin-bottom: 4px; }
-        
-        /* Badges */
-        .badge { font-size: 10px; font-weight: bold; padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
-        .badge-free { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-        .badge-paid { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-        
-        .start-btn { color: #004a99; font-weight: 900; font-size: 13px; letter-spacing: 1px; }
-        
-        #loading { text-align: center; margin-top: 50px; font-weight: bold; color: #004a99; font-size: 14px; }
+        .test-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); border-left: 5px solid #004a99; }
+        .test-title { font-weight: bold; font-size: 16px; color: #333; margin-bottom: 5px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
+        .free-badge { background: #2e7d32; }
+        .paid-badge { background: #d32f2f; }
+        .btn-start { background: #004a99; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; float: right; }
     </style>
 </head>
 <body>
 
 <div class="header" onclick="window.location.href='dashboard.html'">
-    <span style="cursor:pointer;">⬅ ACE Online Test Series</span>
+    <span>⬅ Online Test Series</span>
 </div>
 
-<div class="container" id="mainContainer">
-    <div id="loading">⏳ Loading Topic-wise Tests...</div>
+<div class="container">
+    <h3 style="color: #004a99;">Available Mock Tests</h3>
+
+    <div class="test-card">
+        <div class="test-title">MP ASI Demo Test</div>
+        <span class="badge free-badge">Free</span>
+        <button class="btn-start" onclick="openTest('MP ASI Demo Test', 'Free', '0', 'test1_link.html')">Start</button>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div class="test-card">
+        <div class="test-title">MPTET Math Practice Set</div>
+        <span class="badge paid-badge">Paid - ₹20</span>
+        <button class="btn-start" onclick="openTest('MPTET Math Practice Set', 'Paid', '20', 'test2_link.html')">Unlock</button>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div class="test-card">
+        <div class="test-title">CPCT Full Mock Test</div>
+        <span class="badge paid-badge">Paid - ₹50</span>
+        <button class="btn-start" onclick="openTest('CPCT Full Mock Test', 'Paid', '50', 'test3_link.html')">Unlock</button>
+        <div style="clear:both;"></div>
+    </div>
 </div>
 
 <script>
-    // AAPKA NAYA TEST API URL
-    const API_URL = "https://script.google.com/macros/s/AKfycbyv8lGRvvJfKhSVf-r_hd9q-yj_WKBZ4vrusApUGyKBeLWxAVm49PS2CXWmsHFB7PI/exec";
+    function openTest(name, type, price, link) {
+        // Check if THIS specific test is already unlocked
+        let isItemUnlocked = localStorage.getItem("unlocked_" + name);
+        let isFullPremium = localStorage.getItem("isPremiumUser");
 
-    async function loadTests() {
-        try {
-            let response = await fetch(API_URL, { redirect: "follow" });
-            let topics = await response.json();
-            let container = document.getElementById("mainContainer");
-            container.innerHTML = "";
-
-            // Agar koi data nahi mila
-            if (Object.keys(topics).length === 0) {
-                container.innerHTML = "<div id='loading'>Database mein koi test nahi mila!</div>";
-                return;
-            }
-
-            // Topics aur Tests ko generate karna
-            for (let topic in topics) {
-                // 📁 Topic Heading
-                let heading = document.createElement("div");
-                heading.className = "topic-heading";
-                heading.innerHTML = `<span>📁</span> ${topic}`;
-                container.appendChild(heading);
-
-                // 📝 Tests under this topic
-                topics[topic].forEach(test => {
-                    let isPaid = test.type && test.type.toLowerCase().trim() === "paid";
-                    let badgeClass = isPaid ? "badge-paid" : "badge-free";
-                    let badgeText = isPaid ? "🔒 PAID" : "✅ FREE";
-
-                    let card = document.createElement("div");
-                    card.className = "test-card";
-                    card.onclick = () => handleTestAccess(test.id, test.type);
-                    card.innerHTML = `
-                        <div class="test-info">
-                            <span class="test-name">${test.name}</span>
-                            <span class="badge ${badgeClass}">${badgeText}</span>
-                        </div>
-                        <div class="start-btn">START ❯</div>
-                    `;
-                    container.appendChild(card);
-                });
-            }
-        } catch (e) {
-            console.error(e);
-            document.getElementById("loading").innerText = "⚠️ Connection Error! Please try again.";
-        }
-    }
-
-    function handleTestAccess(testId, type) {
-        // Access Check: Free ya Premium User
-        if(type === "Free" || localStorage.getItem("isPremiumUser") === "true") {
-            localStorage.setItem("currentTestId", testId);
-            window.location.href = "test.html";
+        if (type === 'Paid' && isItemUnlocked !== 'true' && isFullPremium !== 'true') {
+            localStorage.setItem("selectedItemName", name);
+            localStorage.setItem("selectedItemPrice", price);
+            window.location.href = "payment.html";
         } else {
-            let goPay = confirm("🔒 Yeh ek PREMIUM Mock Test hai.\nIse unlock karne ke liye Course buy karein. Kya aap payment page par jana chahte hain?");
-            if(goPay) {
-                window.location.href = "payment.html";
-            }
+            alert("Opening Test: " + name);
+            // window.location.href = link;
         }
     }
-
-    loadTests();
 </script>
-
 </body>
 </html>
