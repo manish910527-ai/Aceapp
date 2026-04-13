@@ -3,121 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Material - ACE</title>
+    <title>PDF Notes - ACE HARDA</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f0f4f7; padding-bottom: 20px; }
-        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f7f9; padding-bottom: 20px; }
+        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; }
         .container { padding: 15px; }
-        
-        /* PDF Card Style */
-        .pdf-card { 
-            background: white; padding: 15px; margin-bottom: 12px; 
-            border-radius: 12px; display: flex; align-items: center; 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.08); cursor: pointer;
-            transition: transform 0.2s; position: relative;
-        }
-        .pdf-card:active { transform: scale(0.97); }
-        .pdf-icon { font-size: 28px; margin-right: 15px; }
-        .pdf-info { flex: 1; }
-        .pdf-name { font-weight: bold; color: #333; font-size: 15px; margin-bottom: 3px; }
-        .pdf-sub { font-size: 11px; color: #888; font-weight: bold; margin-top: 3px;}
-        
-        /* Free & Paid Badges */
-        .badge { font-size: 10px; font-weight: bold; padding: 3px 6px; border-radius: 4px; margin-left: 5px; vertical-align: top; display: inline-block;}
-        .badge-free { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-        .badge-paid { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-
-        .arrow { color: #004a99; font-size: 18px; font-weight: bold; }
-        
-        /* Loading Message Style */
-        #loadingMsg { text-align: center; color: #666; font-weight: bold; margin-top: 30px; font-size: 14px; }
+        .pdf-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); border-left: 5px solid #e64a19; }
+        .pdf-title { font-weight: bold; font-size: 16px; color: #333; margin-bottom: 5px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
+        .free-badge { background: #2e7d32; }
+        .paid-badge { background: #d32f2f; }
+        .btn-read { background: #e64a19; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; float: right; }
     </style>
 </head>
 <body>
 
 <div class="header" onclick="window.location.href='dashboard.html'">
-    <span style="cursor:pointer;">⬅ ACE Notes Library</span>
+    <span>⬅ Study Materials</span>
 </div>
 
-<div class="container" id="pdfListContainer">
-    <div id="loadingMsg">⏳ Internet se Notes load ho rahe hain... Kripya wait karein.</div>
+<div class="container">
+    <h3 style="color: #e64a19;">Premium Notes</h3>
+
+    <div class="pdf-card">
+        <div class="pdf-title">General Knowledge Summary</div>
+        <span class="badge free-badge">Free</span>
+        <button class="btn-read" onclick="openPdf('GK Summary', 'Free', '0', 'pdf1.pdf')">Read</button>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div class="pdf-card">
+        <div class="pdf-title">MP ASI Special Maths</div>
+        <span class="badge paid-badge">Paid - ₹30</span>
+        <button class="btn-read" onclick="openPdf('MP ASI Special Maths', 'Paid', '30', 'pdf2.pdf')">Unlock</button>
+        <div style="clear:both;"></div>
+    </div>
 </div>
 
 <script>
-    // AAPKA NAYA UPDATE KIYA HUA API LINK
-    const API_URL = "https://script.google.com/macros/s/AKfycbxMMtWpR0psfjqoydUxgT9ORmMsUMKfQgz2zdtS3TqmB9AFg8iQrQM796xVsGJX8mA/exec";
+    function openPdf(name, type, price, link) {
+        let isItemUnlocked = localStorage.getItem("unlocked_" + name);
+        let isFullPremium = localStorage.getItem("isPremiumUser");
 
-    async function fetchPdfs() {
-        try {
-            let response = await fetch(API_URL, { redirect: "follow" });
-            let data = await response.json();
-            
-            let container = document.getElementById("pdfListContainer");
-            container.innerHTML = ""; // Loading text hata do
-
-            if(data && data.length > 0) {
-                data.forEach(pdf => {
-                    if(pdf.title && pdf.link) {
-                        
-                        // Check karega ki Paid hai ya Free
-                        let isPaid = false;
-                        if(pdf.type && pdf.type.toLowerCase().trim() === "paid") {
-                            isPaid = true;
-                        }
-                        
-                        let badgeHTML = isPaid ? "<span class='badge badge-paid'>🔒 PAID</span>" : "<span class='badge badge-free'>✅ FREE</span>";
-                        let passType = isPaid ? "Paid" : "Free";
-
-                        let cardHTML = `
-                            <div class="pdf-card" onclick="handleAccess('${pdf.link}', '${pdf.title}', '${passType}')">
-                                <div class="pdf-icon">📕</div>
-                                <div class="pdf-info">
-                                    <div class="pdf-name">${pdf.title} ${badgeHTML}</div>
-                                    <div class="pdf-sub">PDF • Study Material</div>
-                                </div>
-                                <div class="arrow">❯</div>
-                            </div>
-                        `;
-                        container.innerHTML += cardHTML;
-                    }
-                });
-            } else {
-                container.innerHTML = "<div id='loadingMsg'>Database mein koi PDF nahi mili! Google Sheet check karein.</div>";
-            }
-        } catch(error) {
-            console.error("Error loading PDFs:", error);
-            document.getElementById("pdfListContainer").innerHTML = "<div id='loadingMsg'>⚠️ Error: Data load nahi ho paya. Kripya apna internet connection check karein.</div>";
-        }
-    }
-
-    // Yeh function check karega ki pdf kholni hai ya payment page par bhejna hai
-    function handleAccess(url, title, type) {
-        if(type === "Free") {
-            // Agar Free hai toh seedha khol do
-            openPdf(url, title);
+        if (type === 'Paid' && isItemUnlocked !== 'true' && isFullPremium !== 'true') {
+            localStorage.setItem("selectedItemName", name);
+            localStorage.setItem("selectedItemPrice", price);
+            window.location.href = "payment.html";
         } else {
-            // Agar Paid hai toh Premium check karo
-            let hasPaid = localStorage.getItem("isPremiumUser"); 
-            
-            if(hasPaid === "true") {
-                openPdf(url, title);
-            } else {
-                let buyCourse = confirm("🔒 Yeh ek PAID PDF hai.\nIse padhne ke liye aapko Premium Course kharidna hoga. Kya aap abhi Payment page par jana chahte hain?");
-                if(buyCourse) {
-                    window.location.href = "payment.html";
-                }
-            }
+            alert("Opening PDF: " + name);
+            // window.location.href = link;
         }
     }
-
-    function openPdf(url, title) {
-        localStorage.setItem("pdfUrl", url);
-        localStorage.setItem("pdfTitle", title);
-        window.location.href = "pdf.html";
-    }
-
-    fetchPdfs();
 </script>
-
 </body>
 </html>
