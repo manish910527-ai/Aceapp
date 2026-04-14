@@ -1,84 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - ACE HARDA</title>
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f0f4f7; padding-bottom: 30px; }
-        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; }
-        .container { padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; }
-        .item-name { color: #004a99; font-size: 18px; font-weight: bold; }
-        .price-tag { font-size: 35px; font-weight: 900; color: #d32f2f; margin: 10px 0; }
-        .qr-box { width: 200px; height: 200px; background: #eee; border: 2px dashed #004a99; margin: 15px auto; border-radius: 10px; overflow: hidden; }
-        .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-        .btn { display: block; width: 100%; padding: 14px; border-radius: 8px; border: none; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; color: white; text-align: center; margin-bottom: 10px; }
-        .btn-wa { background-color: #25D366; }
-        .activation-box { background: #fff3e0; padding: 20px; border-radius: 12px; border: 2px solid #ffb74d; text-align: center; }
-        #loadingMsg { display: none; color: #004a99; font-weight: bold; margin-top: 10px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment | ACE Education</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
-<div class="header" onclick="window.history.back()">
-    <span>⬅ Payment Checkout</span>
-</div>
-
-<div class="container">
+  <div class="topbar"><span>💳 Payment Unlock</span><button class="btn btn-primary" onclick="history.back()">Back</button></div>
+  <div class="container">
     <div class="card">
-        <div class="item-name" id="itemName">Loading...</div>
-        <div class="price-tag">₹<span id="itemPrice">0</span></div>
-        <div class="qr-box"><img src="qr_code.png" alt="QR"></div>
-        <div style="font-weight:bold; color:#004a99; margin-bottom:15px;">UPI: aceharda@upi</div>
-        <a id="waLink" href="#" class="btn btn-wa">💬 Screenshot on WhatsApp</a>
+      <h3 id="itemName">Content</h3>
+      <h1>₹<span id="itemPrice">0</span></h1>
+      <p>UPI ID: <b>aceharda@upi</b></p>
+      <p class="small">Payment ke baad verify unlock button press karein.</p>
+      <button class="btn btn-warn" onclick="window.open('https://wa.me/919589769913','_blank')">Send Screenshot on WhatsApp</button>
+      <button class="btn btn-primary" onclick="unlock()">Verify & Unlock (Demo)</button>
     </div>
+  </div>
 
-    <div class="activation-box">
-        <h3>Verify Payment</h3>
-        <p style="font-size: 12px; color: #555;">Sir ne update kar diya hai toh niche click karein:</p>
-        <button class="btn" style="background:#004a99;" onclick="verifyPayment()">VERIFY & UNLOCK 🔒</button>
-        <div id="loadingMsg">⏳ Checking Database...</div>
-    </div>
-</div>
+  <script src="app.js"></script>
+  <script>
+    ensureAuth();
+    const itemId = localStorage.getItem('selectedItemId');
+    document.getElementById('itemName').textContent = localStorage.getItem('selectedItemName') || 'Premium Content';
+    document.getElementById('itemPrice').textContent = localStorage.getItem('selectedItemPrice') || '0';
 
-<script>
-    const VERIFY_API_URL = "https://script.google.com/macros/s/AKfycbzrhrumEhzmnv1QeUFy-Gjku5HTCY3M9XN0C0iQ2zhreqn2CWsGzMfWjepELWpckO2r/exec";
-
-    window.onload = function() {
-        let name = localStorage.getItem("selectedItemName") || "ACE Premium";
-        let price = localStorage.getItem("selectedItemPrice") || "0";
-        document.getElementById("itemName").innerText = name;
-        document.getElementById("itemPrice").innerText = price;
-        let waMsg = "Sir, maine '" + name + "' ke liye ₹" + price + " ka payment kiya hai.";
-        document.getElementById("waLink").href = "https://wa.me/919589769913?text=" + encodeURIComponent(waMsg);
-    };
-
-    async function verifyPayment() {
-        let userMobile = localStorage.getItem("userMobile");
-        let itemName = localStorage.getItem("selectedItemName");
-
-        if(!userMobile) return alert("Mobile number error!");
-        document.getElementById("loadingMsg").style.display = "block";
-
-        try {
-            let response = await fetch(VERIFY_API_URL + "?mobile=" + userMobile);
-            let result = await response.json();
-            document.getElementById("loadingMsg").style.display = "none";
-
-            if(result.premium === true) {
-                // 🟢 UNLOCK ONLY THIS SPECIFIC ITEM
-                localStorage.setItem("unlocked_" + itemName, "true");
-                alert("🎉 Success! '" + itemName + "' unlock ho gaya hai.");
-                window.history.back(); 
-            } else {
-                alert("❌ Verification Failed! Sir se sampark karein.");
-            }
-        } catch(e) {
-            document.getElementById("loadingMsg").style.display = "none";
-            alert("Network Error!");
-        }
+    function unlock() {
+      if (!itemId) return alert('No selected content.');
+      unlockItem(itemId);
+      alert('Unlocked successfully.');
+      location.href = 'dashboard.html';
     }
-</script>
+  </script>
 </body>
 </html>

@@ -1,118 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Dashboard</title>
-    <style>
-        body { margin: 0; font-family: Arial; background: #f4f7f9; }
-        #splash { position: fixed; top: 0; width: 100%; height: 100%; background: #004a99; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.5s; }
-        #splash img { width: 100px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        .sidebar { position: fixed; left: -280px; width: 280px; height: 100%; background: white; z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
-        .sidebar.active { left: 0; }
-        .overlay { position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1500; }
-        .overlay.active { display: block; }
-        .app-bar { background: #004a99; color: white; padding: 12px; display: flex; align-items: center; sticky; top: 0; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .menu-btn { border: 2px solid #ffca28; border-radius: 12px; color: white; text-align: center; padding: 20px 5px; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .icon { font-size: 30px; margin-bottom: 5px; }
-        .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 15px 10px; padding: 15px; border-radius: 10px; color: black; font-size: 13px; }
-        #dynamicView { display: none; padding: 10px; }
-        .item-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #004a99; display: flex; justify-content: space-between; align-items: center; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | ACE Education</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="splash"><img src="logo.png" onerror="this.src='https://via.placeholder.com/100?text=ACE'"><h2 style="color:white; margin-top:15px;">ACE HARDA</h2></div>
-    
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    <div class="sidebar" id="sidebar">
-        <div style="background:#004a99; color:white; padding:30px; text-align:center;"><img src="logo.png" style="width:70px; border-radius:50%; border:2px solid white;"><p>Welcome Student</p></div>
-        <a href="#" style="display:block; padding:15px; font-weight:bold; color:#333; text-decoration:none;" onclick="location.reload()">🏠 Home Dashboard</a>
-        <a href="admin.html" style="display:block; padding:15px; color:#666; text-decoration:none;">⚙️ Admin Login</a>
+  <div class="topbar">
+    <span>🎓 ACE Student Dashboard</span>
+    <div>
+      <button class="btn btn-warn" onclick="window.location.href='admin.html'">Admin</button>
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card" style="margin-bottom:12px;">
+      <h3 id="welcome"></h3>
+      <p class="small">Learn with tests, PDFs and video lectures.</p>
+      <div class="grid" style="margin-top:10px;">
+        <div class="menu-card"><strong>Total Tests</strong><h2 id="testCount">0</h2></div>
+        <div class="menu-card"><strong>Total PDFs</strong><h2 id="pdfCount">0</h2></div>
+        <div class="menu-card"><strong>Video Lectures</strong><h2 id="videoCount">0</h2></div>
+      </div>
     </div>
 
-    <div class="app-bar">
-        <div style="font-size:24px; cursor:pointer;" onclick="toggleMenu()">☰</div>
-        <div style="flex:1; text-align:center; font-weight:bold; font-size:14px;">ARITHMETIC COMPUTER EDUCATION</div>
+    <div class="grid">
+      <div class="menu-card"><h3>📝 Test Series</h3><button class="btn btn-primary" onclick="location.href='test_list.html'">Open Tests</button></div>
+      <div class="menu-card"><h3>📚 PDF Notes</h3><button class="btn btn-primary" onclick="location.href='pdf_list.html'">Open PDFs</button></div>
+      <div class="menu-card"><h3>▶️ Video Lectures</h3><button class="btn btn-primary" onclick="openVideos()">Watch Videos</button></div>
+      <div class="menu-card"><h3>💳 My Purchases</h3><button class="btn btn-primary" onclick="location.href='payment.html'">Unlock Paid</button></div>
     </div>
 
-    <div id="homeView">
-        <div style="margin:10px; border-radius:12px; overflow:hidden; border:2px solid white;"><img src="banner.png" style="width:100%;" onerror="this.src='https://via.placeholder.com/600x200?text=ACE+Academy'"></div>
-        <div class="grid">
-            <div class="menu-btn" style="background:#1976d2;" onclick="openSection('Course')"><span class="icon">🎓</span><span class="text">Course</span></div>
-            <div class="menu-btn" style="background:#00796b;" onclick="openSection('Quiz')"><span class="icon">⏱️</span><span class="text">Quiz</span></div>
-            <div class="menu-btn" style="background:#303f9f;" onclick="openSection('Test Series')"><span class="icon">📊</span><span class="text">Test Series</span></div>
-            <div class="menu-btn" style="background:#5d4037;" onclick="openSection('Previous Year')"><span class="icon">⏳</span><span class="text">Previous Year</span></div>
-            <div class="menu-btn" style="background:#e64a19;" onclick="openSection('PDF Notes')"><span class="icon">📚</span><span class="text">Pdf Notes</span></div>
-            <div class="menu-btn" style="background:#2e7d32;" onclick="window.location.href='result.html'"><span class="icon">🏆</span><span class="text">My Result</span></div>
+    <div class="card" style="margin-top:12px;" id="videoContainer"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const session = ensureAuth();
+    if (session) {
+      document.getElementById('welcome').textContent = `Welcome, ${session.name} (${session.role})`;
+      const content = getContent();
+      document.getElementById('testCount').textContent = content.filter(c => c.type === 'test').length;
+      document.getElementById('pdfCount').textContent = content.filter(c => c.type === 'pdf').length;
+      document.getElementById('videoCount').textContent = content.filter(c => c.type === 'video').length;
+    }
+
+    function openVideos() {
+      const videos = getContent().filter(c => c.type === 'video');
+      const html = videos.length ? videos.map(v => `
+        <div class="item card" style="margin-bottom:8px;">
+          <div>
+            <strong>${v.title}</strong><br />
+            <span class="tag ${v.access === 'paid' ? 'tag-paid' : 'tag-free'}">${v.access.toUpperCase()}</span>
+          </div>
+          <button class="btn btn-primary" onclick='playVideo("${v.id}")'>Open</button>
         </div>
-        <div class="bottom-banner">
-            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:5px; margin-bottom:5px;">
-                <b>ACE HARDA</b> <span>📞 95897-69913</span>
-            </div>
-            📍 Opposite Old Sabji Mandi, Harda (M.P.)
-        </div>
-    </div>
+      `).join('') : '<p class="small">No videos available.</p>';
+      document.getElementById('videoContainer').innerHTML = `<h3>Video Lectures</h3>${html}`;
+    }
 
-    <div id="dynamicView">
-        <div style="background:#333; color:white; padding:12px; border-radius:8px; text-align:center; cursor:pointer; margin-bottom:15px; font-weight:bold;" onclick="location.reload()">⬅ GO BACK</div>
-        <div class="grid" id="dynamicGrid"></div>
-        <div id="dynamicList"></div>
-    </div>
-
-    <script>
-        const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
-        let allContent = [];
-
-        window.onload = async () => { 
-            setTimeout(() => { document.getElementById("splash").style.display = "none"; }, 2000);
-            try { let res = await fetch(MASTER_URL); allContent = await res.json(); } catch(e) { console.log("Load Error"); }
-        };
-
-        function toggleMenu() { document.getElementById("sidebar").classList.toggle("active"); document.getElementById("overlay").classList.toggle("active"); }
-        
-        function openSection(name) {
-            document.getElementById("homeView").style.display = "none";
-            document.getElementById("dynamicView").style.display = "block";
-            const filtered = allContent.filter(i => (i.Main_Section || "").toString().trim().toLowerCase() === name.toLowerCase());
-            const folders = [...new Set(filtered.map(i => i.Sub_Folder))].filter(Boolean);
-            let html = "";
-            folders.forEach(f => {
-                html += `<div class="menu-btn" style="background:#00796b;" onclick="openFolder('${name}','${f}')"><span class="icon">📁</span><span class="text">${f}</span></div>`;
-            });
-            document.getElementById("dynamicGrid").innerHTML = html || "<p style='grid-column:span 2; text-align:center;'>No Data Found</p>";
-        }
-
-        function openFolder(sec, fold) {
-            const items = allContent.filter(i => i.Main_Section === sec && i.Sub_Folder === fold);
-            const types = [...new Set(items.map(i => i.Material_Type))].filter(Boolean);
-            let html = "";
-            types.forEach(t => {
-                html += `<div class="menu-btn" style="background:#303f9f;" onclick="openItems('${sec}','${fold}','${t}')"><span class="icon">${t==='Test'?'✍️':'📚'}</span><span class="text">${t}</span></div>`;
-            });
-            document.getElementById("dynamicGrid").innerHTML = html;
-        }
-
-        function openItems(sec, fold, typ) {
-            document.getElementById("dynamicGrid").innerHTML = "";
-            const items = allContent.filter(i => i.Main_Section === sec && i.Sub_Folder === fold && i.Material_Type === typ);
-            let html = "";
-            items.forEach(i => {
-                let isPaid = i.Price > 0;
-                html += `<div class="item-card"><div><b>${i.Item_Name_Tag}</b><br><small>${isPaid?'Paid':'Free'}</small></div>
-                <button style="background:#004a99; color:white; border:none; padding:8px 15px; border-radius:5px;" onclick="handle('${i.Item_Name_Tag}','${i.Link_or_ID}','${isPaid}','${typ}')">OPEN</button></div>`;
-            });
-            document.getElementById("dynamicList").innerHTML = html;
-        }
-
-        function handle(tag, link, paid, typ) {
-            if(paid === "true") { alert("Paid Content! Contact Admin."); return; }
-            if(typ === "Test") {
-                window.location.href = "test.html?testId=" + encodeURIComponent(tag);
-            } else {
-                window.open(link, '_blank');
-            }
-        }
-    </script>
+    function playVideo(id) {
+      const item = getContent().find(c => c.id === id);
+      requirePaymentOrOpen(item, () => window.open(item.url, '_blank'));
+    }
+  </script>
 </body>
 </html>

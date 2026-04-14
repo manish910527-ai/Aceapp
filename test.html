@@ -1,57 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Online Test</title>
-    <style>
-        body { font-family: Arial; background: #f0f2f5; margin: 0; }
-        .header { background: #004a99; color: white; padding: 15px; text-align: center; position: sticky; top: 0; }
-        .q-card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .opt { display: block; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px; cursor: pointer; }
-        .opt.selected { background: #e3f2fd; border-color: #004a99; font-weight: bold; }
-        .btn-row { display: flex; justify-content: space-around; padding: 20px; }
-        button { padding: 10px 25px; border-radius: 8px; border: none; background: #004a99; color: white; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Take Test | ACE Education</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="header"><h3 id="tName">Loading...</h3><div id="timer">Time: 60:00</div></div>
-    <div id="qArea"></div>
-    <div class="btn-row">
-        <button onclick="prevQ()">PREV</button>
-        <button onclick="nextQ()" id="nBtn">NEXT</button>
-    </div>
+  <div class="topbar"><span id="title">Test</span><button class="btn btn-primary" onclick="location.href='test_list.html'">Back</button></div>
+  <div class="container"><div class="card" id="testBox"></div></div>
 
-    <script>
-        const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
-        const tid = new URLSearchParams(window.location.search).get('testId');
-        let qs = [], idx = 0, ans = {};
+  <script src="app.js"></script>
+  <script>
+    ensureAuth();
+    const id = localStorage.getItem('activeTestId');
+    const test = getContent().find(c => c.id === id && c.type === 'test');
+    if (!test) {
+      document.getElementById('testBox').innerHTML = '<p>Test not found.</p>';
+    } else {
+      document.getElementById('title').textContent = `📝 ${test.title}`;
+      renderTest(test);
+    }
 
-        window.onload = async () => {
-            document.getElementById('tName').innerText = tid;
-            try {
-                let res = await fetch(MASTER_URL + "?action=get_questions&testId=" + encodeURIComponent(tid));
-                qs = await res.json();
-                if(qs.length > 0) showQ(); else document.getElementById('qArea').innerHTML = "No questions found.";
-            } catch(e) { alert("Error loading questions!"); }
-        };
+    function renderTest(test) {
+      const html = test.questions.map((q, idx) => `
+        <div style="margin-bottom:14px;">
+          <strong>Q${idx + 1}. ${q.q}</strong>
+          ${q.options.map((o, oi) => `<label style="display:block;margin-top:6px;"><input type="radio" name="q_${idx}" value="${oi}" /> ${o}</label>`).join('')}
+        </div>
+      `).join('') + '<button class="btn btn-primary" onclick="submitTest()">Submit Test</button>';
+      document.getElementById('testBox').innerHTML = html;
+    }
 
-        function showQ() {
-            let q = qs[idx];
-            let html = `<div class="q-card"><p><b>Q${idx+1}: ${q.ques}</b></p>`;
-            ['A','B','C','D'].forEach(o => {
-                let sel = ans[idx] === o ? 'selected' : '';
-                html += `<div class="opt ${sel}" onclick="selOpt('${o}')">${o}. ${q['opt'+o]}</div>`;
-            });
-            document.getElementById('qArea').innerHTML = html + "</div>";
-            document.getElementById('nBtn').innerText = idx === qs.length - 1 ? "SUBMIT" : "NEXT";
-        }
-
-        function selOpt(v) { ans[idx] = v; showQ(); }
-        function prevQ() { if(idx > 0) { idx--; showQ(); } }
-        function nextQ() { 
-            if(idx < qs.length - 1) { idx++; showQ(); } 
-            else { alert("Test Submitted!"); window.location.href = "dashboard.html"; }
-        }
-    </script>
+    function submitTest() {
+      let score = 0;
+      test.questions.forEach((q, idx) => {
+        const selected = document.querySelector(`input[name=q_${idx}]:checked`);
+        if (selected && Number(selected.value) === q.answer) score += 1;
+      });
+      localStorage.setItem('lastResult', JSON.stringify({
+        title: test.title,
+        score,
+        total: test.questions.length,
+        date: new Date().toLocaleString()
+      }));
+      location.href = 'result.html';
+    }
+  </script>
 </body>
 </html>

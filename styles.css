@@ -1,0 +1,70 @@
+:root {
+  --bg: #f3f6ff;
+  --primary: #1f3c88;
+  --accent: #fb8c00;
+  --text: #152238;
+  --muted: #5f6b7a;
+  --card: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.topbar {
+  background: linear-gradient(90deg, var(--primary), #265cc7);
+  color: white;
+  padding: 14px 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container { width: min(1050px, 94%); margin: 16px auto; }
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(25, 45, 84, .08);
+}
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.menu-card {
+  background: linear-gradient(135deg, #fff, #f7f9ff);
+  border: 1px solid #dce6ff;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.btn {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-warn { background: var(--accent); color: #111; }
+.btn-danger { background: #c62828; color: white; }
+.tag { font-size: 12px; padding: 4px 8px; border-radius: 100px; font-weight: 700; }
+.tag-free { background: #e8f5e9; color: #2e7d32; }
+.tag-paid { background: #fff3e0; color: #ef6c00; }
+.input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c9d7ff;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+label { font-size: 13px; font-weight: 700; color: var(--muted); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+.auth-shell { min-height: 100vh; display: grid; place-items: center; }
+.auth-card { width: min(450px, 92%); }
+.small { color: var(--muted); font-size: 13px; }
+.item-list { display: grid; gap: 10px; margin-top: 12px; }
+.item { display:flex; justify-content:space-between; align-items:center; gap: 10px; }

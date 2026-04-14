@@ -1,67 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Tests - ACE HARDA</title>
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f4f7f9; padding-bottom: 20px; }
-        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; }
-        .container { padding: 15px; }
-        .test-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); border-left: 5px solid #004a99; }
-        .test-title { font-weight: bold; font-size: 16px; color: #333; margin-bottom: 5px; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
-        .free-badge { background: #2e7d32; }
-        .paid-badge { background: #d32f2f; }
-        .btn-start { background: #004a99; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; float: right; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tests | ACE Education</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="topbar"><span>📝 Test Series</span><button class="btn btn-primary" onclick="location.href='dashboard.html'">Back</button></div>
+  <div class="container">
+    <div id="tests" class="item-list"></div>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    ensureAuth();
+    const tests = getContent().filter(c => c.type === 'test');
+    document.getElementById('tests').innerHTML = tests.map(t => `
+      <div class="card item">
+        <div>
+          <strong>${t.title}</strong><br/>
+          <span class="tag ${t.access === 'paid' ? 'tag-paid':'tag-free'}">${t.access.toUpperCase()} ${t.price ? `₹${t.price}`:''}</span>
+        </div>
+        <button class="btn btn-primary" onclick="startTest('${t.id}')">Start</button>
+      </div>
+    `).join('') || '<p class="small">No tests found.</p>';
 
-<div class="header" onclick="window.location.href='dashboard.html'">
-    <span>⬅ Online Test Series</span>
-</div>
-
-<div class="container">
-    <h3 style="color: #004a99;">Available Mock Tests</h3>
-
-    <div class="test-card">
-        <div class="test-title">MP ASI Demo Test</div>
-        <span class="badge free-badge">Free</span>
-        <button class="btn-start" onclick="openTest('MP ASI Demo Test', 'Free', '0', 'test1_link.html')">Start</button>
-        <div style="clear:both;"></div>
-    </div>
-
-    <div class="test-card">
-        <div class="test-title">MPTET Math Practice Set</div>
-        <span class="badge paid-badge">Paid - ₹20</span>
-        <button class="btn-start" onclick="openTest('MPTET Math Practice Set', 'Paid', '20', 'test2_link.html')">Unlock</button>
-        <div style="clear:both;"></div>
-    </div>
-
-    <div class="test-card">
-        <div class="test-title">CPCT Full Mock Test</div>
-        <span class="badge paid-badge">Paid - ₹50</span>
-        <button class="btn-start" onclick="openTest('CPCT Full Mock Test', 'Paid', '50', 'test3_link.html')">Unlock</button>
-        <div style="clear:both;"></div>
-    </div>
-</div>
-
-<script>
-    function openTest(name, type, price, link) {
-        // Check if THIS specific test is already unlocked
-        let isItemUnlocked = localStorage.getItem("unlocked_" + name);
-        let isFullPremium = localStorage.getItem("isPremiumUser");
-
-        if (type === 'Paid' && isItemUnlocked !== 'true' && isFullPremium !== 'true') {
-            localStorage.setItem("selectedItemName", name);
-            localStorage.setItem("selectedItemPrice", price);
-            window.location.href = "payment.html";
-        } else {
-            alert("Opening Test: " + name);
-            // window.location.href = link;
-        }
+    function startTest(id) {
+      const item = tests.find(t => t.id === id);
+      requirePaymentOrOpen(item, () => {
+        localStorage.setItem('activeTestId', id);
+        location.href = 'test.html';
+      });
     }
-</script>
+  </script>
 </body>
 </html>

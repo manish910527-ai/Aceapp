@@ -1,68 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Admin</title>
-    <style>
-        body { font-family: Arial; background: #001a33; padding: 15px; color: white; }
-        .card { background: white; padding: 20px; border-radius: 15px; color: #333; margin-bottom: 20px; border-top: 5px solid #004a99; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | ACE Education</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="loginBox" style="text-align:center; padding-top:100px;">
-        <div class="card">
-            <h2>ACE Admin Panel</h2>
-            <input type="password" id="adminPin" placeholder="Enter PIN" maxlength="4">
-            <button class="btn" onclick="checkLogin()">UNLOCK</button>
+  <div class="topbar">
+    <span>⚙️ Admin Control Panel</span>
+    <div>
+      <button class="btn btn-primary" onclick="location.href='dashboard.html'">Dashboard</button>
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h3>Add New Content</h3>
+      <div class="row">
+        <div><label>Title</label><input class="input" id="title" /></div>
+        <div><label>Type</label>
+          <select id="type" onchange="toggleTypeFields()">
+            <option value="test">Test</option>
+            <option value="pdf">PDF</option>
+            <option value="video">Video</option>
+          </select>
         </div>
+      </div>
+      <div class="row">
+        <div><label>Access</label>
+          <select id="access"><option value="free">Free</option><option value="paid">Paid</option></select>
+        </div>
+        <div><label>Price (for paid)</label><input class="input" id="price" type="number" value="0" /></div>
+      </div>
+
+      <div id="urlFields">
+        <label>PDF / YouTube Link</label>
+        <input class="input" id="url" placeholder="https://..." />
+      </div>
+
+      <div id="questionFields" style="display:none;">
+        <label>Questions JSON</label>
+        <textarea id="questions" rows="6" placeholder='[{"q":"2+2=?","options":["1","2","4","5"],"answer":2}]'></textarea>
+        <p class="small">Use array of objects with q, options (4 values), answer index.</p>
+      </div>
+
+      <button class="btn btn-primary" onclick="saveContent()">Save Content</button>
     </div>
 
-    <div id="adminDashboard" style="display:none;">
-        <div class="card">
-            <h3 style="margin-top:0;">📂 Add Content</h3>
-            <select id="mainSec">
-                <option>Course</option><option>Quiz</option><option>Test Series</option>
-                <option>Previous Year</option><option>PDF Notes</option><option>Online Exam</option>
-            </select>
-            <select id="subFold"><option>CPCT</option><option>Tally</option><option>Basic Computer</option><option>MPTET</option></select>
-            <select id="matType"><option>Test</option><option>PDF</option><option>Video</option></select>
-            <input type="text" id="iName" placeholder="Item Name (e.g. Mock Test 1)">
-            <input type="text" id="iID" placeholder="Sheet ID / Google Drive Link">
-            <select id="iType"><option value="Free">Free</option><option value="Paid">Paid</option></select>
-            <input type="number" id="iPrice" placeholder="Price (₹)">
-            <button class="btn" onclick="submitData()">PUBLISH NOW</button>
-        </div>
+    <div class="card" style="margin-top:12px;">
+      <h3>Existing Content</h3>
+      <div id="list" class="item-list"></div>
     </div>
+  </div>
 
-    <script>
-        const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
-        
-        function checkLogin() {
-            if(document.getElementById('adminPin').value === "9913") {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-            } else { alert("Wrong PIN!"); }
-        }
+  <script src="app.js"></script>
+  <script>
+    ensureAuth(true);
+    render();
 
-        async function submitData() {
-            let payload = {
-                action: 'add_content',
-                mainSection: document.getElementById('mainSec').value,
-                subFolder: document.getElementById('subFold').value,
-                matType: document.getElementById('matType').value,
-                itemName: document.getElementById('iName').value,
-                fileId: document.getElementById('iID').value,
-                type: document.getElementById('iType').value,
-                price: document.getElementById('iPrice').value
-            };
-            try {
-                let res = await fetch(MASTER_URL, { method: 'POST', body: JSON.stringify(payload) });
-                alert(await res.text());
-                location.reload();
-            } catch(e) { alert("Error!"); }
+    function toggleTypeFields() {
+      const type = document.getElementById('type').value;
+      document.getElementById('questionFields').style.display = type === 'test' ? 'block' : 'none';
+      document.getElementById('urlFields').style.display = type === 'test' ? 'none' : 'block';
+    }
+
+    function saveContent() {
+      const title = document.getElementById('title').value.trim();
+      const type = document.getElementById('type').value;
+      const access = document.getElementById('access').value;
+      const price = Number(document.getElementById('price').value || 0);
+      if (!title) return alert('Title required');
+
+      const item = { id: crypto.randomUUID(), title, type, access, price };
+
+      if (type === 'test') {
+        try {
+          const parsed = JSON.parse(document.getElementById('questions').value || '[]');
+          if (!Array.isArray(parsed) || parsed.length === 0) throw new Error();
+          item.questions = parsed;
+        } catch {
+          return alert('Valid test questions JSON is required');
         }
-    </script>
+      } else {
+        const url = document.getElementById('url').value.trim();
+        if (!url.startsWith('http')) return alert('Valid URL required');
+        item.url = url;
+      }
+
+      const content = getContent();
+      content.push(item);
+      setContent(content);
+      alert('Content saved');
+      render();
+    }
+
+    function removeItem(id) {
+      const content = getContent().filter(c => c.id !== id);
+      setContent(content);
+      render();
+    }
+
+    function render() {
+      const html = getContent().map(i => `
+        <div class="card item">
+          <div>
+            <strong>${i.title}</strong><br/>
+            <span class="small">${i.type.toUpperCase()} | ${i.access.toUpperCase()} ${i.price ? `| ₹${i.price}` : ''}</span>
+          </div>
+          <button class="btn btn-danger" onclick="removeItem('${i.id}')">Delete</button>
+        </div>
+      `).join('');
+      document.getElementById('list').innerHTML = html || '<p class="small">No content yet.</p>';
+    }
+  </script>
 </body>
 </html>
