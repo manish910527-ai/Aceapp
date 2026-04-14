@@ -1,59 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Notes - ACE HARDA</title>
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f4f7f9; padding-bottom: 20px; }
-        .header { background: #004a99; color: white; padding: 15px; font-weight: bold; }
-        .container { padding: 15px; }
-        .pdf-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); border-left: 5px solid #e64a19; }
-        .pdf-title { font-weight: bold; font-size: 16px; color: #333; margin-bottom: 5px; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
-        .free-badge { background: #2e7d32; }
-        .paid-badge { background: #d32f2f; }
-        .btn-read { background: #e64a19; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; float: right; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Notes | ACE Education</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="topbar"><span>📚 PDF Notes</span><button class="btn btn-primary" onclick="location.href='dashboard.html'">Back</button></div>
+  <div class="container"><div id="pdfs" class="item-list"></div></div>
 
-<div class="header" onclick="window.location.href='dashboard.html'">
-    <span>⬅ Study Materials</span>
-</div>
+  <script src="app.js"></script>
+  <script>
+    ensureAuth();
+    const pdfs = getContent().filter(c => c.type === 'pdf');
+    document.getElementById('pdfs').innerHTML = pdfs.map(p => `
+      <div class="card item">
+        <div>
+          <strong>${p.title}</strong><br/>
+          <span class="tag ${p.access === 'paid' ? 'tag-paid':'tag-free'}">${p.access.toUpperCase()} ${p.price ? `₹${p.price}`:''}</span>
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="openPdf('${p.id}')">Read</button>
+          ${p.access === 'free' ? `<button class='btn btn-warn' onclick='downloadPdf("${p.url}")'>Download</button>` : ''}
+        </div>
+      </div>
+    `).join('') || '<p class="small">No PDF uploaded yet.</p>';
 
-<div class="container">
-    <h3 style="color: #e64a19;">Premium Notes</h3>
-
-    <div class="pdf-card">
-        <div class="pdf-title">General Knowledge Summary</div>
-        <span class="badge free-badge">Free</span>
-        <button class="btn-read" onclick="openPdf('GK Summary', 'Free', '0', 'pdf1.pdf')">Read</button>
-        <div style="clear:both;"></div>
-    </div>
-
-    <div class="pdf-card">
-        <div class="pdf-title">MP ASI Special Maths</div>
-        <span class="badge paid-badge">Paid - ₹30</span>
-        <button class="btn-read" onclick="openPdf('MP ASI Special Maths', 'Paid', '30', 'pdf2.pdf')">Unlock</button>
-        <div style="clear:both;"></div>
-    </div>
-</div>
-
-<script>
-    function openPdf(name, type, price, link) {
-        let isItemUnlocked = localStorage.getItem("unlocked_" + name);
-        let isFullPremium = localStorage.getItem("isPremiumUser");
-
-        if (type === 'Paid' && isItemUnlocked !== 'true' && isFullPremium !== 'true') {
-            localStorage.setItem("selectedItemName", name);
-            localStorage.setItem("selectedItemPrice", price);
-            window.location.href = "payment.html";
-        } else {
-            alert("Opening PDF: " + name);
-            // window.location.href = link;
-        }
+    function openPdf(id) {
+      const item = pdfs.find(p => p.id === id);
+      requirePaymentOrOpen(item, () => {
+        localStorage.setItem('activePdfId', id);
+        location.href = 'pdf.html';
+      });
     }
-</script>
+
+    function downloadPdf(url) { window.open(url, '_blank'); }
+  </script>
 </body>
 </html>
