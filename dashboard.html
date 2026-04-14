@@ -82,6 +82,31 @@
       color: #2d3137;
       text-decoration: none;
       border-bottom: 1px solid #edf0f3;
+      cursor: pointer;
+    }
+
+    .sidebar-profile {
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+
+    .theme-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .theme-btn {
+      border: 1px solid #d7dee7;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #233142;
+      padding: 8px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .app-bar {
@@ -199,6 +224,32 @@
       color: #5c6672;
       padding: 14px;
     }
+
+    body.dark {
+      --bg: #111827;
+      --text: #e5e7eb;
+    }
+
+    body.dark .sidebar,
+    body.dark .item-card,
+    body.dark .empty {
+      background: #1f2937;
+      color: #e5e7eb;
+      border-color: #374151;
+    }
+
+    body.dark .menu-link {
+      color: #e5e7eb;
+      border-bottom-color: #374151;
+    }
+
+    body.dark .theme-btn {
+      background: #111827;
+      border-color: #374151;
+      color: #e5e7eb;
+    }
+
+    body.dark .back-btn { background: #0f172a; }
   </style>
 </head>
 <body>
@@ -213,12 +264,27 @@
     <div class="sidebar-head">
       <img src="logo.png" alt="ACE" onerror="this.src='https://via.placeholder.com/100'" />
       <h3 style="margin: 10px 0 4px;">ACE HARDA</h3>
-      <p style="margin: 0; opacity: 0.9;">Welcome Student</p>
+      <p style="margin: 0; opacity: 0.9;" id="welcomeText">Welcome Student</p>
+      <div class="sidebar-profile">
+        <div><b>Student ID:</b> <span id="studentId">N/A</span></div>
+        <div><b>Mobile:</b> <span id="studentMobile">N/A</span></div>
+      </div>
     </div>
     <a class="menu-link" href="#" onclick="location.reload()">🏠 Home Dashboard</a>
+    <a class="menu-link" href="login.html">🔐 Student Login</a>
     <a class="menu-link" href="payment.html">💳 Buy Course</a>
+    <a class="menu-link" href="test_list.html">📝 Test Library</a>
+    <a class="menu-link" href="pdf_list.html">📚 PDF Library</a>
     <a class="menu-link" href="result.html">🏆 My Result</a>
+    <a class="menu-link" href="signup.html">👤 Create Account</a>
+    <a class="menu-link" href="https://wa.me/919589769913" target="_blank">📞 Support</a>
+    <a class="menu-link" href="#" onclick="openSettings()">⚙️ Settings</a>
+    <a class="menu-link" href="#" onclick="logoutStudent()">🚪 Logout</a>
     <a class="menu-link" href="admin.html">⚙️ Admin Login</a>
+    <div class="theme-actions">
+      <button class="theme-btn" onclick="setTheme('light')">☀️ Light</button>
+      <button class="theme-btn" onclick="setTheme('dark')">🌙 Dark</button>
+    </div>
   </aside>
 
   <header class="app-bar">
@@ -271,6 +337,8 @@
         setTimeout(() => { splash.style.display = "none"; }, 500);
       }, 1900);
 
+      setupStudentProfile();
+      applySavedTheme();
       await loadDashboardContent();
     };
 
@@ -287,6 +355,43 @@
     function toggleMenu() {
       document.getElementById("sidebar").classList.toggle("active");
       document.getElementById("overlay").classList.toggle("active");
+    }
+
+    function setupStudentProfile() {
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+      const userName = localStorage.getItem("userName") || "Student";
+      const userMobile = localStorage.getItem("userMobile") || "N/A";
+      const shortId = userMobile && userMobile !== "N/A" ? `ACE-${userMobile.slice(-4)}` : "GUEST";
+
+      document.getElementById("welcomeText").innerText = isLoggedIn ? `Welcome, ${userName}` : "Welcome Guest";
+      document.getElementById("studentId").innerText = shortId;
+      document.getElementById("studentMobile").innerText = userMobile;
+    }
+
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem("aceTheme") || "light";
+      setTheme(savedTheme);
+    }
+
+    function setTheme(theme) {
+      if (theme === "dark") {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+      localStorage.setItem("aceTheme", theme);
+    }
+
+    function openSettings() {
+      alert("Settings open: Use Light/Dark theme buttons in sidebar.");
+    }
+
+    function logoutStudent() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userMobile");
+      alert("Logged out successfully.");
+      window.location.href = "./login.html";
     }
 
     function goHome() {
