@@ -1,118 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Dashboard</title>
-    <style>
-        body { margin: 0; font-family: Arial; background: #f4f7f9; }
-        #splash { position: fixed; top: 0; width: 100%; height: 100%; background: #004a99; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.5s; }
-        #splash img { width: 100px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        .sidebar { position: fixed; left: -280px; width: 280px; height: 100%; background: white; z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
-        .sidebar.active { left: 0; }
-        .overlay { position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1500; }
-        .overlay.active { display: block; }
-        .app-bar { background: #004a99; color: white; padding: 12px; display: flex; align-items: center; sticky; top: 0; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .menu-btn { border: 2px solid #ffca28; border-radius: 12px; color: white; text-align: center; padding: 20px 5px; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .icon { font-size: 30px; margin-bottom: 5px; }
-        .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 15px 10px; padding: 15px; border-radius: 10px; color: black; font-size: 13px; }
-        #dynamicView { display: none; padding: 10px; }
-        .item-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #004a99; display: flex; justify-content: space-between; align-items: center; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACE Dashboard</title>
+  <style>
+    :root {
+      --primary: #004a99;
+      --accent: #ffca28;
+      --bg: #f4f7f9;
+      --text: #1b1f24;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #003b7a, var(--primary));
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.45s ease;
+    }
+
+    #splash img { width: 108px; animation: blink 1.4s infinite; }
+    #splash h2 { color: #fff; margin-top: 14px; letter-spacing: 2px; font-weight: 700; }
+    @keyframes blink { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1200;
+      display: none;
+    }
+
+    .overlay.active { display: block; }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 290px;
+      height: 100%;
+      background: #fff;
+      z-index: 1300;
+      transition: left 0.3s ease;
+      box-shadow: 5px 0 20px rgba(0, 0, 0, 0.25);
+      overflow-y: auto;
+    }
+
+    .sidebar.active { left: 0; }
+
+    .sidebar-head {
+      background: var(--primary);
+      color: #fff;
+      text-align: center;
+      padding: 28px 16px;
+    }
+
+    .sidebar-head img {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+    }
+
+    .menu-link {
+      display: block;
+      padding: 14px 18px;
+      font-weight: 600;
+      color: #2d3137;
+      text-decoration: none;
+      border-bottom: 1px solid #edf0f3;
+    }
+
+    .app-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-toggle { font-size: 24px; cursor: pointer; }
+    .app-title {
+      flex: 1;
+      text-align: center;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.7px;
+    }
+
+    .container { max-width: 980px; margin: 0 auto; }
+
+    .banner-wrap {
+      margin: 10px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .banner-wrap img { width: 100%; display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .menu-btn {
+      border: 2px solid var(--accent);
+      border-radius: 14px;
+      color: #fff;
+      text-align: center;
+      min-height: 112px;
+      padding: 12px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.12);
+      transition: transform 0.15s ease;
+    }
+
+    .menu-btn:active { transform: scale(0.97); }
+    .icon { font-size: 30px; margin-bottom: 6px; }
+    .text { font-weight: 700; font-size: 13px; }
+
+    .bottom-banner {
+      margin: 15px 10px;
+      background: linear-gradient(to right, #ffca28, #f57c00);
+      border-radius: 10px;
+      color: #111;
+      padding: 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    #dynamicView { display: none; padding: 10px; }
+
+    .back-btn {
+      background: #313843;
+      color: #fff;
+      border-radius: 8px;
+      text-align: center;
+      padding: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .item-card {
+      background: #fff;
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .item-card small { color: #5c6672; }
+
+    .open-btn {
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-weight: 700;
+      padding: 9px 14px;
+      cursor: pointer;
+    }
+
+    .empty {
+      grid-column: span 2;
+      background: #fff;
+      border-radius: 8px;
+      text-align: center;
+      color: #5c6672;
+      padding: 14px;
+    }
+  </style>
 </head>
 <body>
-    <div id="splash"><img src="logo.png" onerror="this.src='https://via.placeholder.com/100?text=ACE'"><h2 style="color:white; margin-top:15px;">ACE HARDA</h2></div>
-    
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    <div class="sidebar" id="sidebar">
-        <div style="background:#004a99; color:white; padding:30px; text-align:center;"><img src="logo.png" style="width:70px; border-radius:50%; border:2px solid white;"><p>Welcome Student</p></div>
-        <a href="#" style="display:block; padding:15px; font-weight:bold; color:#333; text-decoration:none;" onclick="location.reload()">🏠 Home Dashboard</a>
-        <a href="admin.html" style="display:block; padding:15px; color:#666; text-decoration:none;">⚙️ Admin Login</a>
-    </div>
+  <div id="splash">
+    <img src="logo.png" alt="ACE Logo" onerror="this.src='https://via.placeholder.com/120?text=ACE'" />
+    <h2>ACE HARDA</h2>
+  </div>
 
-    <div class="app-bar">
-        <div style="font-size:24px; cursor:pointer;" onclick="toggleMenu()">☰</div>
-        <div style="flex:1; text-align:center; font-weight:bold; font-size:14px;">ARITHMETIC COMPUTER EDUCATION</div>
-    </div>
+  <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
-    <div id="homeView">
-        <div style="margin:10px; border-radius:12px; overflow:hidden; border:2px solid white;"><img src="banner.png" style="width:100%;" onerror="this.src='https://via.placeholder.com/600x200?text=ACE+Academy'"></div>
-        <div class="grid">
-            <div class="menu-btn" style="background:#1976d2;" onclick="openSection('Course')"><span class="icon">🎓</span><span class="text">Course</span></div>
-            <div class="menu-btn" style="background:#00796b;" onclick="openSection('Quiz')"><span class="icon">⏱️</span><span class="text">Quiz</span></div>
-            <div class="menu-btn" style="background:#303f9f;" onclick="openSection('Test Series')"><span class="icon">📊</span><span class="text">Test Series</span></div>
-            <div class="menu-btn" style="background:#5d4037;" onclick="openSection('Previous Year')"><span class="icon">⏳</span><span class="text">Previous Year</span></div>
-            <div class="menu-btn" style="background:#e64a19;" onclick="openSection('PDF Notes')"><span class="icon">📚</span><span class="text">Pdf Notes</span></div>
-            <div class="menu-btn" style="background:#2e7d32;" onclick="window.location.href='result.html'"><span class="icon">🏆</span><span class="text">My Result</span></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <img src="logo.png" alt="ACE" onerror="this.src='https://via.placeholder.com/100'" />
+      <h3 style="margin: 10px 0 4px;">ACE HARDA</h3>
+      <p style="margin: 0; opacity: 0.9;">Welcome Student</p>
+    </div>
+    <a class="menu-link" href="#" onclick="location.reload()">🏠 Home Dashboard</a>
+    <a class="menu-link" href="payment.html">💳 Buy Course</a>
+    <a class="menu-link" href="result.html">🏆 My Result</a>
+    <a class="menu-link" href="admin.html">⚙️ Admin Login</a>
+  </aside>
+
+  <header class="app-bar">
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="app-title">ARITHMETIC COMPUTER EDUCATION</div>
+    <div style="font-size: 18px;">🔔</div>
+  </header>
+
+  <main class="container">
+    <section id="homeView">
+      <div class="banner-wrap">
+        <img src="banner.png" alt="ACE Banner" onerror="this.src='https://via.placeholder.com/900x300?text=ACE+Academy'" />
+      </div>
+
+      <div class="grid">
+        <div class="menu-btn" style="background:#1976d2;" onclick="openSection('Course')"><span class="icon">🎓</span><span class="text">Course</span></div>
+        <div class="menu-btn" style="background:#00796b;" onclick="openSection('Quiz')"><span class="icon">⏱️</span><span class="text">Quiz</span></div>
+        <div class="menu-btn" style="background:#303f9f;" onclick="openSection('Test Series')"><span class="icon">📊</span><span class="text">Test Series</span></div>
+        <div class="menu-btn" style="background:#5d4037;" onclick="openSection('Previous Year')"><span class="icon">⏳</span><span class="text">Previous Year</span></div>
+        <div class="menu-btn" style="background:#c62828;" onclick="window.location.href='payment.html'"><span class="icon">🛒</span><span class="text">Buy Course</span></div>
+        <div class="menu-btn" style="background:#e64a19;" onclick="openSection('PDF Notes')"><span class="icon">📚</span><span class="text">Pdf Notes</span></div>
+        <div class="menu-btn" style="background:#7b1fa2;" onclick="openSection('Online Exam')"><span class="icon">📝</span><span class="text">Online Exam</span></div>
+        <div class="menu-btn" style="background:#2e7d32;" onclick="window.location.href='result.html'"><span class="icon">🏆</span><span class="text">My Result</span></div>
+      </div>
+
+      <div class="bottom-banner">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:8px;margin-bottom:8px;">
+          <strong>ACE HARDA</strong>
+          <span>📞 95897-69913</span>
         </div>
-        <div class="bottom-banner">
-            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:5px; margin-bottom:5px;">
-                <b>ACE HARDA</b> <span>📞 95897-69913</span>
-            </div>
-            📍 Opposite Old Sabji Mandi, Harda (M.P.)
-        </div>
-    </div>
+        📍 Opposite Old Sabji Mandi, Harda (M.P.)
+      </div>
+    </section>
 
-    <div id="dynamicView">
-        <div style="background:#333; color:white; padding:12px; border-radius:8px; text-align:center; cursor:pointer; margin-bottom:15px; font-weight:bold;" onclick="location.reload()">⬅ GO BACK</div>
-        <div class="grid" id="dynamicGrid"></div>
-        <div id="dynamicList"></div>
-    </div>
+    <section id="dynamicView">
+      <div class="back-btn" onclick="goHome()">⬅ GO BACK</div>
+      <div id="dynamicGrid" class="grid"></div>
+      <div id="dynamicList"></div>
+    </section>
+  </main>
 
-    <script>
-        const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
-        let allContent = [];
+  <script>
+    const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
+    let allContent = [];
 
-        window.onload = async () => { 
-            setTimeout(() => { document.getElementById("splash").style.display = "none"; }, 2000);
-            try { let res = await fetch(MASTER_URL); allContent = await res.json(); } catch(e) { console.log("Load Error"); }
-        };
+    window.onload = async () => {
+      setTimeout(() => {
+        const splash = document.getElementById("splash");
+        splash.style.opacity = "0";
+        setTimeout(() => { splash.style.display = "none"; }, 500);
+      }, 1900);
 
-        function toggleMenu() { document.getElementById("sidebar").classList.toggle("active"); document.getElementById("overlay").classList.toggle("active"); }
-        
-        function openSection(name) {
-            document.getElementById("homeView").style.display = "none";
-            document.getElementById("dynamicView").style.display = "block";
-            const filtered = allContent.filter(i => (i.Main_Section || "").toString().trim().toLowerCase() === name.toLowerCase());
-            const folders = [...new Set(filtered.map(i => i.Sub_Folder))].filter(Boolean);
-            let html = "";
-            folders.forEach(f => {
-                html += `<div class="menu-btn" style="background:#00796b;" onclick="openFolder('${name}','${f}')"><span class="icon">📁</span><span class="text">${f}</span></div>`;
-            });
-            document.getElementById("dynamicGrid").innerHTML = html || "<p style='grid-column:span 2; text-align:center;'>No Data Found</p>";
+      await loadDashboardContent();
+    };
+
+    async function loadDashboardContent() {
+      try {
+        const response = await fetch(`${MASTER_URL}?action=get_content`);
+        allContent = await response.json();
+      } catch (error) {
+        console.error("Dashboard load failed", error);
+        allContent = [];
+      }
+    }
+
+    function toggleMenu() {
+      document.getElementById("sidebar").classList.toggle("active");
+      document.getElementById("overlay").classList.toggle("active");
+    }
+
+    function goHome() {
+      document.getElementById("dynamicList").innerHTML = "";
+      document.getElementById("dynamicGrid").innerHTML = "";
+      document.getElementById("dynamicView").style.display = "none";
+      document.getElementById("homeView").style.display = "block";
+    }
+
+    function showDynamicSection() {
+      document.getElementById("homeView").style.display = "none";
+      document.getElementById("dynamicView").style.display = "block";
+    }
+
+    function openSection(sectionName) {
+      showDynamicSection();
+
+      const filtered = allContent.filter((item) =>
+        (item.Main_Section || "").toString().trim().toLowerCase() === sectionName.toLowerCase()
+      );
+
+      const folders = [...new Set(filtered.map((item) => item.Sub_Folder).filter(Boolean))];
+      const dynamicGrid = document.getElementById("dynamicGrid");
+      dynamicGrid.innerHTML = "";
+      document.getElementById("dynamicList").innerHTML = "";
+
+      if (!folders.length) {
+        dynamicGrid.innerHTML = `<div class="empty">No content found in ${sectionName}.</div>`;
+        return;
+      }
+
+      folders.forEach((folderName) => {
+        const card = document.createElement("div");
+        card.className = "menu-btn";
+        card.style.background = "#00796b";
+        card.innerHTML = `<span class="icon">📁</span><span class="text">${folderName}</span>`;
+        card.onclick = () => openFolder(sectionName, folderName);
+        dynamicGrid.appendChild(card);
+      });
+    }
+
+    function openFolder(sectionName, folderName) {
+      const items = allContent.filter((item) => item.Main_Section === sectionName && item.Sub_Folder === folderName);
+      const types = [...new Set(items.map((item) => item.Material_Type).filter(Boolean))];
+      const dynamicGrid = document.getElementById("dynamicGrid");
+      dynamicGrid.innerHTML = "";
+      document.getElementById("dynamicList").innerHTML = "";
+
+      if (!types.length) {
+        dynamicGrid.innerHTML = `<div class="empty">No materials available in this folder.</div>`;
+        return;
+      }
+
+      types.forEach((type) => {
+        const isTest = type === "Test";
+        const isPdf = type === "PDF";
+        const color = isTest ? "#c62828" : isPdf ? "#1e88e5" : "#ef6c00";
+        const icon = isTest ? "✍️" : isPdf ? "📄" : "▶️";
+
+        const card = document.createElement("div");
+        card.className = "menu-btn";
+        card.style.background = color;
+        card.innerHTML = `<span class="icon">${icon}</span><span class="text">${type}</span>`;
+        card.onclick = () => openItems(sectionName, folderName, type);
+        dynamicGrid.appendChild(card);
+      });
+    }
+
+    function openItems(sectionName, folderName, materialType) {
+      const items = allContent.filter((item) =>
+        item.Main_Section === sectionName && item.Sub_Folder === folderName && item.Material_Type === materialType
+      );
+
+      document.getElementById("dynamicGrid").innerHTML = "";
+      const listContainer = document.getElementById("dynamicList");
+      listContainer.innerHTML = "";
+
+      if (!items.length) {
+        listContainer.innerHTML = `<div class="empty" style="grid-column: span 1;">No items found.</div>`;
+        return;
+      }
+
+      items.forEach((item) => {
+        const accessType = (item.Access_Type || "").toString().trim().toLowerCase();
+        const isPaid = accessType ? accessType === "paid" : Number(item.Price || 0) > 0;
+
+        const row = document.createElement("div");
+        row.className = "item-card";
+
+        const info = document.createElement("div");
+        info.innerHTML = `<b>${item.Item_Name_Tag || "Untitled"}</b><br /><small>${isPaid ? "Paid" : "Free"}</small>`;
+
+        const button = document.createElement("button");
+        button.className = "open-btn";
+        button.style.background = isPaid ? "#5f6670" : "#004a99";
+        button.textContent = isPaid ? "BUY" : "OPEN";
+        button.onclick = () => handle(item.Item_Name_Tag || "", item.Link_or_ID || "", isPaid, materialType);
+
+        row.appendChild(info);
+        row.appendChild(button);
+        listContainer.appendChild(row);
+      });
+    }
+
+    function handle(testTag, linkOrId, isPaid, materialType) {
+      if (isPaid) {
+        alert("Paid Content! Contact Admin.");
+        return;
+      }
+
+      if (materialType === "Test") {
+        const currentParams = new URLSearchParams(window.location.search);
+        currentParams.set("testId", testTag);
+        window.location.href = `./test.html?${currentParams.toString()}`;
+        return;
+      }
+
+      if (materialType === "PDF" || materialType === "Video") {
+        if (!linkOrId) {
+          alert("Content link not available.");
+          return;
         }
+        window.open(linkOrId, "_blank");
+        return;
+      }
 
-        function openFolder(sec, fold) {
-            const items = allContent.filter(i => i.Main_Section === sec && i.Sub_Folder === fold);
-            const types = [...new Set(items.map(i => i.Material_Type))].filter(Boolean);
-            let html = "";
-            types.forEach(t => {
-                html += `<div class="menu-btn" style="background:#303f9f;" onclick="openItems('${sec}','${fold}','${t}')"><span class="icon">${t==='Test'?'✍️':'📚'}</span><span class="text">${t}</span></div>`;
-            });
-            document.getElementById("dynamicGrid").innerHTML = html;
-        }
-
-        function openItems(sec, fold, typ) {
-            document.getElementById("dynamicGrid").innerHTML = "";
-            const items = allContent.filter(i => i.Main_Section === sec && i.Sub_Folder === fold && i.Material_Type === typ);
-            let html = "";
-            items.forEach(i => {
-                let isPaid = i.Price > 0;
-                html += `<div class="item-card"><div><b>${i.Item_Name_Tag}</b><br><small>${isPaid?'Paid':'Free'}</small></div>
-                <button style="background:#004a99; color:white; border:none; padding:8px 15px; border-radius:5px;" onclick="handle('${i.Item_Name_Tag}','${i.Link_or_ID}','${isPaid}','${typ}')">OPEN</button></div>`;
-            });
-            document.getElementById("dynamicList").innerHTML = html;
-        }
-
-        function handle(tag, link, paid, typ) {
-            if(paid === "true") { alert("Paid Content! Contact Admin."); return; }
-            if(typ === "Test") {
-                window.location.href = "test.html?testId=" + encodeURIComponent(tag);
-            } else {
-                window.open(link, '_blank');
-            }
-        }
-    </script>
+      if (linkOrId) {
+        window.open(linkOrId, "_blank");
+      } else {
+        alert("No action available for this content.");
+      }
+    }
+  </script>
 </body>
 </html>

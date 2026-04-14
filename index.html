@@ -1,206 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishwamitra Institute - ACE</title>
-    <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; overflow-x: hidden; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACE Academy</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(160deg, #003f84, #004a99 50%, #0c6ecf);
+      color: #fff;
+    }
 
-        /* 1. PREMIUM SPLASH SCREEN */
-        #splash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #004a99; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 10000;
-            transition: 0.6s ease-in-out;
-        }
-        #splash img { width: 120px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
-        #splash h2 { color: white; margin-top: 20px; font-weight: 300; letter-spacing: 2px; }
+    .card {
+      width: min(92vw, 460px);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 18px;
+      backdrop-filter: blur(7px);
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+    }
 
-        /* 2. SIDEBAR MENU */
-        .sidebar {
-            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
-            background: white; box-shadow: 4px 0 15px rgba(0,0,0,0.2);
-            z-index: 2000; transition: 0.4s;
-        }
-        .sidebar.active { left: 0; }
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; z-index: 1500;
-        }
-        .overlay.active { display: block; }
-        .sidebar-header { background: #004a99; color: white; padding: 40px 20px; text-align: center; }
-        .sidebar-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #ffca28; margin-bottom: 10px; }
-        .menu-item { display: block; padding: 15px 25px; color: #333; text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+    .logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid #ffca28;
+      margin-bottom: 10px;
+      animation: blink 1.4s infinite;
+    }
 
-        /* 3. APP BAR */
-        .app-bar { 
-            background: #004a99; color: white; padding: 12px 15px; 
-            display: flex; align-items: center; position: sticky; top: 0; z-index: 100; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .app-bar-title { flex: 1; text-align: center; font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* 4. DASHBOARD GRID */
-        .banner-container { margin: 10px; border-radius: 12px; overflow: hidden; border: 2px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .menu-btn { 
-            border: 2px solid #ffca28; border-radius: 12px; color: white; 
-            text-align: center; padding: 22px 5px; cursor: pointer; 
-            display: flex; flex-direction: column; align-items: center; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s;
-        }
-        .menu-btn:active { transform: scale(0.95); }
-        .menu-btn .icon { font-size: 32px; margin-bottom: 8px; }
-        .menu-btn .text { font-size: 13px; font-weight: bold; }
+    @keyframes blink { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 
-        /* BOTTOM BANNER */
-        .bottom-banner { background: linear-gradient(to right, #ffca28, #f57c00); margin: 15px 10px; padding: 15px; border-radius: 10px; color: black; font-size: 12px; }
-        .address-bar { background: #212121; color: white; text-align: center; padding: 8px; font-size: 11px; margin-top: 15px; border-radius: 5px; }
+    .banner-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
 
-        /* DYNAMIC VIEW */
-        #dynamicView { display: none; padding: 10px; }
-        .back-nav { background: #333; color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; text-align: center; cursor: pointer; }
-        .item-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #004a99; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .open-btn { background: #004a99; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; }
-    </style>
+    .banner-wrap img { width: 100%; display: block; }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    a.btn {
+      text-decoration: none;
+      display: inline-block;
+      padding: 11px 10px;
+      border-radius: 9px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .btn-login { background: #2e7d32; }
+    .btn-dashboard { background: #e64a19; }
+  </style>
 </head>
 <body>
+  <div class="card">
+    <img class="logo" src="logo.png" alt="ACE Logo" onerror="this.src='https://via.placeholder.com/90?text=ACE'" />
+    <h2 style="margin: 6px 0 0;">ACE HARDA</h2>
+    <p style="margin: 8px 0 0; opacity: 0.95;">ARITHMETIC COMPUTER EDUCATION</p>
 
-    <div id="splash">
-        <img src="logo.png" onerror="this.src='https://via.placeholder.com/120?text=ACE+LOGO'">
-        <h2>ACE HARDA</h2>
+    <div class="banner-wrap">
+      <img src="banner.png" alt="ACE Banner" onerror="this.src='https://via.placeholder.com/700x240?text=ACE+Academy'" />
     </div>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="logo.png" onerror="this.src='https://via.placeholder.com/80'">
-            <h3>ACE HARDA</h3>
-            <p>Vishwamitra Institute</p>
-        </div>
-        <a href="#" class="menu-item" onclick="location.reload()">🏠 Home</a>
-        <a href="payment.html" class="menu-item">💳 My Courses</a>
-        <a href="admin.html" class="menu-item">⚙️ Admin Login</a>
-        <a href="https://wa.me/919589769913" class="menu-item">📞 Contact Support</a>
+    <div class="btn-row">
+      <a href="login.html" class="btn btn-login">Student Login</a>
+      <a href="dashboard.html" class="btn btn-dashboard">Open Dashboard</a>
     </div>
-
-    <div class="app-bar">
-        <div style="font-size:24px; cursor:pointer;" onclick="toggleMenu()">☰</div>
-        <div class="app-bar-title" id="topTitle">ARITHMETIC COMPUTER EDUCATION</div>
-        <div style="font-size:20px;">🔔</div>
-    </div>
-
-    <div id="homeView">
-        <div class="banner-container">
-            <img src="banner.png" style="width:100%;" onerror="this.src='https://via.placeholder.com/600x200?text=Welcome+to+Vishwamitra+Institute'">
-        </div>
-        
-        <div class="grid-container">
-            <div class="menu-btn" style="background:#1976d2;" onclick="openSection('Course')"><span class="icon">🎓</span><span class="text">Course</span></div>
-            <div class="menu-btn" style="background:#00796b;" onclick="openSection('Quiz')"><span class="icon">⏱️</span><span class="text">Quiz</span></div>
-            <div class="menu-btn" style="background:#303f9f;" onclick="openSection('Test Series')"><span class="icon">📊</span><span class="text">Test Series</span></div>
-            <div class="menu-btn" style="background:#5d4037;" onclick="openSection('Previous Year')"><span class="icon">⏳</span><span class="text">Previous Year</span></div>
-            <div class="menu-btn" style="background:#c62828;" onclick="window.location.href='payment.html'"><span class="icon">🛒</span><span class="text">Buy Course</span></div>
-            <div class="menu-btn" style="background:#e64a19;" onclick="openSection('PDF Notes')"><span class="icon">📚</span><span class="text">Pdf Notes</span></div>
-            <div class="menu-btn" style="background:#7b1fa2;" onclick="openSection('Online Exam')"><span class="icon">📝</span><span class="text">Online Exam</span></div>
-            <div class="menu-btn" style="background:#2e7d32;" onclick="window.location.href='result.html'"><span class="icon">🏆</span><span class="text">My Result</span></div>
-        </div>
-
-        <div class="bottom-banner">
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px;">
-                <h2 style="margin: 0; font-size: 16px;">ACE HARDA</h2>
-                <div style="font-weight: bold;">📞 95897-69913</div>
-            </div>
-            <p style="margin: 10px 0 0 0; font-weight: bold;">CPCT • Tally • Basic Computer • MP ASI</p>
-            <div class="address-bar">📍 Opposite Old Sabji Mandi, Harda (M.P.)</div>
-        </div>
-    </div>
-
-    <div id="dynamicView">
-        <div class="back-nav" id="backBtn" onclick="location.reload()">⬅ GO BACK</div>
-        <div class="grid-container" id="dynamicGrid"></div>
-        <div id="dynamicList"></div>
-    </div>
-
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
-        let allData = [];
-
-        window.onload = async () => {
-            // Splash timing
-            setTimeout(() => {
-                document.getElementById('splash').style.opacity = '0';
-                setTimeout(() => document.getElementById('splash').style.display = 'none', 600);
-            }, 2500);
-
-            // Fetching content
-            try { 
-                let res = await fetch(API_URL); 
-                allData = await res.json(); 
-            } catch(e) { console.log("Load Error"); }
-        };
-
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        function openSection(name) {
-            document.getElementById('homeView').style.display = 'none';
-            document.getElementById('dynamicView').style.display = 'block';
-            document.getElementById('topTitle').innerText = name;
-            
-            const filtered = allData.filter(i => (i.Main_Section || "").toString().trim().toLowerCase() === name.toLowerCase());
-            const folders = [...new Set(filtered.map(i => i.Sub_Folder))].filter(Boolean);
-
-            let html = "";
-            if(folders.length === 0) html = "<p style='grid-column:span 2; text-align:center;'>Coming Soon...</p>";
-            else folders.forEach(f => {
-                html += `<div class="menu-btn" style="background:#00796b;" onclick="openFolder('${name}','${f}')"><span class="icon">📁</span><span class="text">${f}</span></div>`;
-            });
-            document.getElementById('dynamicGrid').innerHTML = html;
-        }
-
-        function openFolder(sec, fold) {
-            const items = allData.filter(i => i.Main_Section === sec && i.Sub_Folder === fold);
-            const types = [...new Set(items.map(i => i.Material_Type))].filter(Boolean);
-            let html = "";
-            types.forEach(t => {
-                let color = t==='Test'?'#d32f2f':(t==='PDF'?'#1976d2':'#f57c00');
-                html += `<div class="menu-btn" style="background:${color};" onclick="openItems('${sec}','${fold}','${t}')">
-                    <span class="icon">${t==='Test'?'✍️':(t==='PDF'?'📚':'▶️')}</span><span class="text">${t}</span></div>`;
-            });
-            document.getElementById('dynamicGrid').innerHTML = html;
-        }
-
-        function openItems(sec, fold, typ) {
-            document.getElementById('dynamicGrid').innerHTML = "";
-            const items = allData.filter(i => i.Main_Section === sec && i.Sub_Folder === fold && i.Material_Type === typ);
-            let html = "";
-            items.forEach(i => {
-                let isPaid = i.Access_Type === "Paid";
-                html += `<div class="item-card"><div><b>${i.Item_Name_Tag}</b><br><small>${isPaid?'Paid':'Free'}</small></div>
-                <button class="open-btn" style="background:${isPaid?'#444':'#004a99'};" 
-                onclick="handle('${i.Item_Name_Tag}','${i.Link_or_ID}','${isPaid}','${typ}')">${isPaid?'BUY':'OPEN'}</button></div>`;
-            });
-            document.getElementById('dynamicList').innerHTML = html;
-        }
-
-        function handle(tag, link, isPaid, type) {
-            if(isPaid === true || isPaid === "true") { 
-                alert("🔒 Paid Content! Admin se sampark karein."); 
-                return; 
-            }
-            if(type === "Test") {
-                // FIXED REDIRECTION: Path fixed for GitHub Pages
-                window.location.href = "./test.html?testId=" + encodeURIComponent(tag);
-            } else {
-                window.open(link, '_blank');
-            }
-        }
-    </script>
+  </div>
 </body>
-                             </html>
-    
+</html>
