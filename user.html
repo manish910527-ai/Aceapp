@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paramount Academy Khandwa • Student</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #080808;
+      --bg2: #121212;
+      --gold: #e3ba53;
+      --muted: #d2c6a6;
+      --text: #f7f7f7;
+      --glass: rgba(255, 255, 255, 0.04);
+      --ok: #32d08b;
+      --danger: #ff6f6f;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'Poppins', 'Roboto', sans-serif;
+      background: radial-gradient(circle at 90% 0%, #2f2610 0, #0f0f0f 35%, var(--bg) 80%);
+      padding: 12px;
+    }
+    .app { max-width: 1180px; margin: 0 auto; }
+    .hidden { display: none !important; }
+    .glass {
+      background: var(--glass);
+      border: 1px solid rgba(227,186,83,.25);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.42);
+    }
+    .top { padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .title { font-size: .98rem; }
+    .tiny { color: var(--muted); font-size: .74rem; }
+    .btn {
+      border: 1px solid rgba(227,186,83,.35);
+      background: rgba(227,186,83,.12);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: .8rem;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .btn:hover { background: rgba(227,186,83,.22); }
+    .btn.bad { border-color: rgba(255,111,111,.5); background: rgba(255,111,111,.16); }
+    .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
+    .tabs .btn { padding: 10px 6px; font-size: .72rem; }
+    .grid { display: grid; gap: 10px; }
+    .card { padding: 12px; }
+    .card h3 { color: var(--gold); font-size: .9rem; margin-bottom: 8px; }
+    label { display: block; font-size: .74rem; color: var(--muted); margin: 8px 0 5px; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid rgba(227,186,83,.25);
+      background: rgba(0,0,0,.3);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px;
+      font-family: inherit;
+      font-size: .82rem;
+    }
+    textarea { min-height: 80px; }
+    .inline { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat { padding: 10px; border-radius: 12px; background: rgba(0,0,0,.24); border: 1px solid rgba(227,186,83,.2); }
+    .stat .v { color: var(--gold); font-size: 1rem; font-weight: 700; }
+    .stat .k { color: var(--muted); font-size: .72rem; }
+    .list { display: grid; gap: 8px; }
+    .item { padding: 10px; border-radius: 12px; background: rgba(0,0,0,.24); border: 1px solid rgba(227,186,83,.2); }
+    .item .meta { font-size: .72rem; color: var(--muted); margin-bottom: 4px; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .pill { font-size: .66rem; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(227,186,83,.45); }
+    .bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .bar > span { display: block; height: 100%; background: linear-gradient(90deg, #886d2c, #e3ba53); }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,.72); display: grid; place-items: center; padding: 12px; z-index: 999;
+    }
+    .modal-box { width: min(700px, 96vw); max-height: 92vh; overflow: auto; }
+
+    #testQ { font-size: .93rem; margin-bottom: 8px; }
+    .opt { margin-bottom: 7px; border-radius: 10px; border: 1px solid rgba(227,186,83,.25); padding: 8px; cursor: pointer; }
+    .opt.active { background: rgba(227,186,83,.17); }
+
+    #toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px; border-radius: 999px; border: 1px solid rgba(227,186,83,.35); background: rgba(0,0,0,.84); padding: 9px 13px; font-size: .78rem; opacity: 0; transition: .25s; pointer-events: none; }
+    #toast.show { opacity: 1; }
+
+    @media (min-width: 940px) {
+      .main { display: grid; grid-template-columns: 1.12fr .88fr; gap: 10px; align-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="auth" class="glass card">
+      <h3><i class="fa-solid fa-user-graduate"></i> Student Authentication</h3>
+      <div class="inline">
+        <button class="btn" id="showLoginBtn">Login</button>
+        <button class="btn" id="showRegisterBtn">Register</button>
+      </div>
+
+      <div id="loginForm">
+        <label>Email</label><input id="loginEmail" type="email" placeholder="name@email.com" />
+        <label>Password</label><input id="loginPassword" type="password" placeholder="••••••••" />
+        <button class="btn" id="loginBtn" style="margin-top:8px;">Login & Continue</button>
+      </div>
+
+      <div id="registerForm" class="hidden">
+        <label>Full Name</label><input id="regName" />
+        <label>Email</label><input id="regEmail" type="email" />
+        <label>Password</label><input id="regPassword" type="password" />
+        <div class="inline">
+          <div><label>State</label><input id="regState" placeholder="Madhya Pradesh" /></div>
+          <div><label>Exam Category</label><select id="regExam"><option>SSC</option><option>Railway</option><option>MP</option></select></div>
+        </div>
+        <button class="btn" id="registerBtn" style="margin-top:8px;">Create Account</button>
+      </div>
+    </section>
+
+    <section id="panel" class="hidden">
+      <header class="top glass">
+        <div>
+          <div class="title">Paramount Academy Khandwa • Student Panel</div>
+          <div class="tiny" id="welcomeLine">Welcome</div>
+        </div>
+        <div class="row">
+          <span class="pill" id="coinPill">Coins: 0</span>
+          <button class="btn bad" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+      </header>
+
+      <div class="tabs">
+        <button class="btn tab" data-tab="dashboard">Dashboard</button>
+        <button class="btn tab" data-tab="study">Study</button>
+        <button class="btn tab" data-tab="tests">Tests</button>
+        <button class="btn tab" data-tab="analytics">Analytics</button>
+        <button class="btn tab" data-tab="engage">Engage</button>
+      </div>
+
+      <div class="main">
+        <div class="grid">
+          <article class="glass card tab-pane" data-pane="dashboard">
+            <h3><i class="fa-solid fa-gauge-high"></i> Dashboard & Categories</h3>
+            <div class="inline">
+              <div><label>Exam Selection</label><select id="examFilter"><option>SSC</option><option>Railway</option><option>MP</option></select></div>
+              <div><label>Subject</label><select id="subjectFilter"><option>All</option><option>Maths</option><option>Reasoning</option><option>English</option><option>GS/GK</option><option>Current Affairs</option></select></div>
+            </div>
+            <div class="row" style="margin-top:8px;">
+              <span class="pill">Maths</span><span class="pill">Reasoning</span><span class="pill">English</span><span class="pill">GS/GK</span><span class="pill">Current Affairs</span>
+            </div>
+          </article>
+
+          <article class="glass card tab-pane hidden" data-pane="study">
+            <h3><i class="fa-solid fa-book-open"></i> Study Material + Current Affairs</h3>
+            <div class="list" id="pdfList"></div>
+            <h3 style="margin-top:10px;"><i class="fa-solid fa-newspaper"></i> Daily Current Affairs</h3>
+            <div class="list" id="caList"></div>
+          </article>
+
+          <article class="glass card tab-pane hidden" data-pane="tests">
+            <h3><i class="fa-solid fa-stopwatch"></i> Test Engine</h3>
+            <div class="list" id="testList"></div>
+          </article>
+
+          <article class="glass card tab-pane hidden" data-pane="analytics">
+            <h3><i class="fa-solid fa-chart-column"></i> Performance Analytics</h3>
+            <div class="stat-grid">
+              <div class="stat"><div class="v" id="sAttempts">0</div><div class="k">Attempts</div></div>
+              <div class="stat"><div class="v" id="sScore">0</div><div class="k">Avg Score %</div></div>
+              <div class="stat"><div class="v" id="sRank">-</div><div class="k">Rank</div></div>
+            </div>
+            <label style="margin-top:10px;">Weak Topic Detection</label>
+            <div id="weakTopicBox" class="list"></div>
+            <h3 style="margin-top:10px;"><i class="fa-solid fa-list-check"></i> Attempt History</h3>
+            <div class="list" id="historyList"></div>
+          </article>
+
+          <article class="glass card tab-pane hidden" data-pane="engage">
+            <h3><i class="fa-solid fa-fire"></i> Daily Quiz, Streak & Rewards</h3>
+            <div class="row" style="margin-bottom:8px;">
+              <span class="pill" id="streakPill">Streak: 0 day</span>
+              <span class="pill" id="dailyStatus">Daily Quiz: Pending</span>
+            </div>
+            <button class="btn" id="playDailyBtn">Play Daily Quiz (+5 coins)</button>
+
+            <h3 style="margin-top:10px;"><i class="fa-solid fa-brain"></i> AI-Inspired Doubt Solver</h3>
+            <textarea id="doubtInput" placeholder="Type your doubt..."></textarea>
+            <button class="btn" id="solveBtn" style="margin-top:8px;">Solve Doubt</button>
+            <div class="item" id="doubtOutput" style="margin-top:8px;">Response will appear here.</div>
+
+            <h3 style="margin-top:10px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Question Generator</h3>
+            <div class="inline"><input id="qgTopic" placeholder="Topic e.g. Percentage" /><button class="btn" id="genBtn">Generate</button></div>
+            <div class="list" id="generatedQuestions" style="margin-top:8px;"></div>
+          </article>
+        </div>
+
+        <div class="grid">
+          <article class="glass card">
+            <h3><i class="fa-solid fa-trophy"></i> Leaderboard</h3>
+            <div class="list" id="leaderboardList"></div>
+          </article>
+
+          <article class="glass card">
+            <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+            <div class="list" id="notifyList"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="testModal" class="modal hidden">
+    <div class="modal-box glass card">
+      <h3 id="testTitle">Test</h3>
+      <div class="row" style="justify-content:space-between; margin-bottom:8px;">
+        <span class="pill" id="testCounter">Q 1/1</span>
+        <span class="pill" id="testTimer">00:00</span>
+      </div>
+      <div id="testQ"></div>
+      <div id="testOptions"></div>
+      <div class="inline" style="margin-top:10px;">
+        <button class="btn" id="prevBtn">Prev</button>
+        <button class="btn" id="nextBtn">Next</button>
+      </div>
+      <button class="btn" id="submitTestBtn" style="margin-top:8px;">Submit Test</button>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getDatabase, ref, get, set, push, onValue, query, orderByChild, limitToLast, update } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: 'REPLACE_API_KEY',
+      authDomain: 'REPLACE_PROJECT.firebaseapp.com',
+      databaseURL: 'https://REPLACE_PROJECT-default-rtdb.firebaseio.com',
+      projectId: 'REPLACE_PROJECT',
+      storageBucket: 'REPLACE_PROJECT.appspot.com',
+      messagingSenderId: 'REPLACE',
+      appId: 'REPLACE'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const $ = (id) => document.getElementById(id);
+    const toast = $('toast');
+    const sk = 'pak_user_session';
+
+    const state = {
+      user: null,
+      uid: null,
+      questions: {},
+      weekly: {},
+      results: {},
+      currentTest: null,
+      timer: null,
+      timeLeft: 0,
+      answers: {}
+    };
+
+    const notify = (m) => { toast.textContent = m; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); };
+
+    const hash = (t) => btoa(unescape(encodeURIComponent(t))).slice(0, 20);
+    const uidFromEmail = (email) => `u_${hash(email.toLowerCase())}`;
+
+    const switchTab = (tab) => {
+      document.querySelectorAll('.tab-pane').forEach((el) => el.classList.toggle('hidden', el.dataset.pane !== tab));
+    };
+    document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+    $('showLoginBtn').onclick = () => { $('loginForm').classList.remove('hidden'); $('registerForm').classList.add('hidden'); };
+    $('showRegisterBtn').onclick = () => { $('registerForm').classList.remove('hidden'); $('loginForm').classList.add('hidden'); };
+
+    const renderGate = () => {
+      const active = !!state.uid;
+      $('auth').classList.toggle('hidden', active);
+      $('panel').classList.toggle('hidden', !active);
+      if (active) {
+        $('welcomeLine').textContent = `Welcome ${state.user.name} • ${state.user.examCategory}`;
+        $('coinPill').textContent = `Coins: ${state.user.coins || 0}`;
+      }
+    };
+
+    const saveSession = () => localStorage.setItem(sk, JSON.stringify({ uid: state.uid }));
+
+    const loadUserByUid = async (uid) => {
+      const snap = await get(ref(db, `users/${uid}`));
+      if (!snap.exists()) return false;
+      state.uid = uid;
+      state.user = snap.val();
+      renderGate();
+      bindLiveData();
+      return true;
+    };
+
+    $('registerBtn').onclick = async () => {
+      const payload = {
+        name: $('regName').value.trim(),
+        email: $('regEmail').value.trim().toLowerCase(),
+        password: $('regPassword').value,
+        state: $('regState').value.trim(),
+        examCategory: $('regExam').value,
+        coins: 0,
+        streak: 0,
+        lastDailyAttempt: '',
+        createdAt: Date.now()
+      };
+      if (!payload.name || !payload.email || !payload.password || !payload.state) return notify('Please fill all registration fields');
+      const uid = uidFromEmail(payload.email);
+      const exists = await get(ref(db, `users/${uid}`));
+      if (exists.exists()) return notify('Email already registered');
+      await set(ref(db, `users/${uid}`), payload);
+      await set(ref(db, `leaderboard/${uid}`), { uid, name: payload.name, coins: 0 });
+      notify('Registration successful. Please login.');
+      $('showLoginBtn').click();
+    };
+
+    $('loginBtn').onclick = async () => {
+      const email = $('loginEmail').value.trim().toLowerCase();
+      const pass = $('loginPassword').value;
+      if (!email || !pass) return notify('Enter email and password');
+      const uid = uidFromEmail(email);
+      const snap = await get(ref(db, `users/${uid}`));
+      const u = snap.val();
+      if (!u || u.password !== pass) return notify('Invalid credentials');
+      state.uid = uid; state.user = u; saveSession(); renderGate(); bindLiveData(); notify('Welcome back');
+    };
+
+    $('logoutBtn').onclick = () => {
+      localStorage.removeItem(sk);
+      state.uid = null; state.user = null;
+      renderGate();
+      notify('Logged out');
+    };
+
+    const buildPDFs = (data) => {
+      const exam = $('examFilter').value;
+      const subject = $('subjectFilter').value;
+      const items = Object.values(data || {}).filter((p) => p.exam === exam && (subject === 'All' || p.subject === subject));
+      $('pdfList').innerHTML = items.map((p) => `
+        <div class="item">
+          <div class="meta">${p.exam} • ${p.subject} • ${p.createdDate || '-'}</div>
+          <div><b>${p.title}</b></div>
+          <div class="row" style="margin-top:6px;"><a class="btn" href="${p.url}" target="_blank">View</a><a class="btn" href="${p.url}" download>Download</a></div>
+        </div>`).join('') || '<div class="item">No PDFs found for selected filter.</div>';
+    };
+
+    const buildCurrentAffairs = (pdfs) => {
+      const items = Object.values(pdfs || {}).filter((p) => p.subject === 'Current Affairs').sort((a,b)=> (b.createdAt||0)-(a.createdAt||0)).slice(0, 10);
+      $('caList').innerHTML = items.map((p) => `<div class="item"><div class="meta">${p.createdDate || '-'}</div><b>${p.title}</b></div>`).join('') || '<div class="item">No daily update yet.</div>';
+    };
+
+    const randomize = (arr) => [...arr].sort(() => Math.random() - 0.5);
+
+    const getTestPools = () => {
+      const exam = $('examFilter').value;
+      const all = Object.values(state.questions).filter((q) => q.exam === exam);
+      return {
+        sectional: randomize(all.filter((q) => q.type === 'sectional')).slice(0, 20),
+        full: randomize(all.filter((q) => q.type === 'full')).slice(0, 50),
+        daily: randomize(all.filter((q) => q.type === 'daily')).slice(0, 10),
+      };
+    };
+
+    const listTests = () => {
+      const pools = getTestPools();
+      const weekly = Object.values(state.weekly).filter((w) => w.enabled && w.exam === $('examFilter').value);
+      const rows = [
+        { title: 'Sectional Test', id: 'sectional', count: pools.sectional.length, mins: 20, neg: -0.25 },
+        { title: 'Full-Length Mock Test', id: 'full', count: pools.full.length, mins: 60, neg: -0.25 },
+        { title: 'Daily Quiz', id: 'daily', count: pools.daily.length, mins: 10, neg: 0 },
+        ...weekly.map((w) => ({ title: `${w.title} (${w.date})`, id: `weekly_${w.id}`, count: (w.questionIds || []).length, mins: 45, neg: -0.25 }))
+      ];
+
+      $('testList').innerHTML = rows.map((r) => `
+        <div class="item">
+          <div class="meta">${r.count} Questions • ${r.mins} min • Negative: ${r.neg}</div>
+          <div class="row" style="justify-content:space-between;"><b>${r.title}</b><button class="btn" data-start="${r.id}">Start</button></div>
+        </div>
+      `).join('');
+
+      $('testList').querySelectorAll('[data-start]').forEach((btn) => {
+        btn.onclick = () => startTest(btn.dataset.start);
+      });
+    };
+
+    const renderQ = () => {
+      const t = state.currentTest;
+      const q = t.questions[t.index];
+      $('testCounter').textContent = `Q ${t.index + 1}/${t.questions.length}`;
+      $('testQ').textContent = q.text;
+      $('testOptions').innerHTML = q.options.map((o, i) => `<div class="opt ${state.answers[q.id] === i ? 'active' : ''}" data-opt="${i}">${String.fromCharCode(65+i)}. ${o}</div>`).join('');
+      $('testOptions').querySelectorAll('.opt').forEach((op) => op.onclick = () => { state.answers[q.id] = Number(op.dataset.opt); renderQ(); });
+    };
+
+    const submitTest = async (auto = false) => {
+      const t = state.currentTest;
+      if (!t) return;
+      if (!auto && !confirm('Submit test now?')) return;
+      clearInterval(state.timer);
+
+      let score = 0;
+      let correct = 0;
+      const subjectMap = {};
+      t.questions.forEach((q) => {
+        const ans = state.answers[q.id];
+        if (!subjectMap[q.subject]) subjectMap[q.subject] = { total: 0, got: 0 };
+        subjectMap[q.subject].total += Number(q.marks || 1);
+        if (ans === q.correct) {
+          correct += 1;
+          score += Number(q.marks || 1);
+          subjectMap[q.subject].got += Number(q.marks || 1);
+        } else if (ans !== undefined) {
+          score += Number(q.negative || -0.25);
+        }
+      });
+
+      const total = t.questions.reduce((s, q) => s + Number(q.marks || 1), 0);
+      const pct = total ? Math.max(0, (score / total) * 100) : 0;
+      const rid = push(ref(db, 'results')).key;
+      const payload = {
+        id: rid,
+        uid: state.uid,
+        userName: state.user.name,
+        exam: $('examFilter').value,
+        testType: t.type,
+        totalQuestions: t.questions.length,
+        correct,
+        score: Number(score.toFixed(2)),
+        percentage: Number(pct.toFixed(2)),
+        subjectPerformance: subjectMap,
+        createdAt: Date.now(),
+        date: new Date().toISOString().slice(0,10)
+      };
+      await set(ref(db, `results/${rid}`), payload);
+
+      const bonus = Math.max(2, Math.round(pct / 10));
+      const coins = Number(state.user.coins || 0) + bonus;
+      await update(ref(db, `users/${state.uid}`), { coins });
+      await set(ref(db, `leaderboard/${state.uid}`), { uid: state.uid, name: state.user.name, coins });
+
+      $('testModal').classList.add('hidden');
+      state.currentTest = null;
+      state.answers = {};
+      notify(auto ? 'Time up. Test auto-submitted.' : `Submitted. Score: ${payload.score}`);
+    };
+
+    const startTimer = () => {
+      clearInterval(state.timer);
+      const tick = () => {
+        state.timeLeft -= 1;
+        const m = String(Math.floor(state.timeLeft / 60)).padStart(2, '0');
+        const s = String(state.timeLeft % 60).padStart(2, '0');
+        $('testTimer').textContent = `${m}:${s}`;
+        if (state.timeLeft <= 0) submitTest(true);
+      };
+      tick();
+      state.timer = setInterval(tick, 1000);
+    };
+
+    const startTest = (type) => {
+      const pools = getTestPools();
+      let questions = [];
+      let mins = 10;
+      if (type === 'sectional') { questions = pools.sectional; mins = 20; }
+      else if (type === 'full') { questions = pools.full; mins = 60; }
+      else if (type === 'daily') { questions = pools.daily; mins = 10; }
+      else if (type.startsWith('weekly_')) {
+        const wid = type.split('_')[1];
+        const weekly = state.weekly[wid];
+        questions = (weekly?.questionIds || []).map((id) => state.questions[id]).filter(Boolean);
+        mins = 45;
+      }
+
+      if (!questions.length) return notify('No questions available for this test');
+      state.currentTest = { type, questions: randomize(questions), index: 0 };
+      state.answers = {};
+      state.timeLeft = mins * 60;
+      $('testTitle').textContent = type.replace('_', ' ').toUpperCase();
+      $('testModal').classList.remove('hidden');
+      renderQ();
+      startTimer();
+    };
+
+    $('prevBtn').onclick = () => {
+      if (!state.currentTest) return;
+      state.currentTest.index = Math.max(0, state.currentTest.index - 1);
+      renderQ();
+    };
+    $('nextBtn').onclick = () => {
+      if (!state.currentTest) return;
+      state.currentTest.index = Math.min(state.currentTest.questions.length - 1, state.currentTest.index + 1);
+      renderQ();
+    };
+    $('submitTestBtn').onclick = () => submitTest(false);
+
+    const renderAnalytics = (allResults, lb) => {
+      const mine = Object.values(allResults || {}).filter((r) => r.uid === state.uid).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      $('sAttempts').textContent = mine.length;
+      const avg = mine.length ? (mine.reduce((s, r) => s + Number(r.percentage || 0), 0) / mine.length) : 0;
+      $('sScore').textContent = avg.toFixed(1);
+
+      const ranks = Object.values(lb || {}).sort((a,b)=>(b.coins||0)-(a.coins||0));
+      const myRank = ranks.findIndex((r) => r.uid === state.uid);
+      $('sRank').textContent = myRank >= 0 ? `#${myRank + 1}` : '-';
+
+      const weak = {};
+      mine.forEach((r) => {
+        Object.entries(r.subjectPerformance || {}).forEach(([k, v]) => {
+          if (!weak[k]) weak[k] = { got: 0, total: 0 };
+          weak[k].got += Number(v.got || 0); weak[k].total += Number(v.total || 0);
+        });
+      });
+
+      const weakRows = Object.entries(weak).map(([topic, v]) => ({
+        topic, pct: v.total ? (v.got / v.total) * 100 : 0
+      })).sort((a,b)=>a.pct-b.pct).slice(0, 4);
+
+      $('weakTopicBox').innerHTML = weakRows.map((w) => `
+        <div class="item"><div class="row" style="justify-content:space-between;"><span>${w.topic}</span><span>${w.pct.toFixed(0)}%</span></div>
+        <div class="bar"><span style="width:${Math.max(4,w.pct)}%"></span></div></div>
+      `).join('') || '<div class="item">Attempt tests to detect weak topics.</div>';
+
+      $('historyList').innerHTML = mine.slice(0, 12).map((r) => `<div class="item"><div class="meta">${r.date} • ${r.testType}</div><b>Score ${r.score}</b> (${r.percentage}%)</div>`).join('') || '<div class="item">No attempts yet.</div>';
+    };
+
+    const handleDailyQuiz = async () => {
+      const today = new Date().toISOString().slice(0,10);
+      if (state.user.lastDailyAttempt === today) return notify('Daily quiz already completed');
+      const coins = Number(state.user.coins || 0) + 5;
+      const last = state.user.lastDailyAttempt;
+      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+      const streak = last === yesterday ? Number(state.user.streak || 0) + 1 : 1;
+      await update(ref(db, `users/${state.uid}`), { coins, streak, lastDailyAttempt: today });
+      await set(ref(db, `leaderboard/${state.uid}`), { uid: state.uid, name: state.user.name, coins });
+      notify('Daily quiz reward credited');
+    };
+
+    $('playDailyBtn').onclick = handleDailyQuiz;
+
+    $('solveBtn').onclick = () => {
+      const text = $('doubtInput').value.trim().toLowerCase();
+      if (!text) return notify('Enter a doubt first');
+      let response = 'Focus on basics: definitions, formula list, and 20 MCQs practice.';
+      if (text.includes('percentage')) response = 'For percentage, master x% of y, increase/decrease and profit-loss shortcut fractions.';
+      if (text.includes('reasoning')) response = 'Break reasoning into pattern blocks: coding-decoding, series, blood relation, puzzles.';
+      if (text.includes('current')) response = 'Revise current affairs in date buckets: national, economy, sports, awards.';
+      $('doubtOutput').textContent = response;
+    };
+
+    $('genBtn').onclick = () => {
+      const topic = $('qgTopic').value.trim() || 'General Aptitude';
+      const rows = Array.from({ length: 3 }, (_, i) => `
+        <div class="item"><div class="meta">Generated #${i + 1}</div><b>${topic} pattern question ${i + 1}</b><div>Option set: A / B / C / D</div></div>
+      `).join('');
+      $('generatedQuestions').innerHTML = rows;
+    };
+
+    $('examFilter').onchange = () => { listTests(); };
+    $('subjectFilter').onchange = () => {
+      get(ref(db, 'pdfs')).then((s) => { buildPDFs(s.val() || {}); buildCurrentAffairs(s.val() || {}); });
+    };
+
+    const bindLiveData = () => {
+      onValue(ref(db, `users/${state.uid}`), (snap) => {
+        state.user = snap.val() || state.user;
+        renderGate();
+        const today = new Date().toISOString().slice(0,10);
+        $('streakPill').textContent = `Streak: ${state.user.streak || 0} day`;
+        $('dailyStatus').textContent = `Daily Quiz: ${state.user.lastDailyAttempt === today ? 'Completed' : 'Pending'}`;
+      });
+
+      onValue(ref(db, 'questions'), (snap) => { state.questions = snap.val() || {}; listTests(); });
+      onValue(ref(db, 'weekly_tests'), (snap) => { state.weekly = snap.val() || {}; listTests(); });
+
+      onValue(ref(db, 'pdfs'), (snap) => {
+        const data = snap.val() || {};
+        buildPDFs(data);
+        buildCurrentAffairs(data);
+      });
+
+      onValue(query(ref(db, 'notifications'), limitToLast(25)), (snap) => {
+        const notes = Object.values(snap.val() || {}).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+        $('notifyList').innerHTML = notes.map((n) => `<div class="item"><div class="meta">${new Date(n.createdAt || Date.now()).toLocaleDateString()}</div>${n.message || '-'}</div>`).join('') || '<div class="item">No notifications.</div>';
+      });
+
+      onValue(query(ref(db, 'leaderboard'), orderByChild('coins'), limitToLast(20)), (snap) => {
+        const rows = Object.values(snap.val() || {}).sort((a,b)=>(b.coins||0)-(a.coins||0));
+        $('leaderboardList').innerHTML = rows.map((r, i) => `<div class="item"><div class="row" style="justify-content:space-between;"><span>#${i + 1} ${r.name}</span><b>${r.coins || 0} coins</b></div></div>`).join('') || '<div class="item">No leaderboard data.</div>';
+      });
+
+      onValue(ref(db, 'results'), (snap) => {
+        state.results = snap.val() || {};
+        get(ref(db, 'leaderboard')).then((lb) => renderAnalytics(state.results, lb.val() || {}));
+      });
+    };
+
+    (async function init() {
+      const raw = localStorage.getItem(sk);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed.uid) await loadUserByUid(parsed.uid);
+      } catch {
+        localStorage.removeItem(sk);
+      }
+    })();
+  </script>
+</body>
+</html>
