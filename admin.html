@@ -1,68 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE Admin</title>
-    <style>
-        body { font-family: Arial; background: #001a33; padding: 15px; color: white; }
-        .card { background: white; padding: 20px; border-radius: 15px; color: #333; margin-bottom: 20px; border-top: 5px solid #004a99; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { background: #004a99; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paramount Academy Khandwa • Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #090909;
+      --bg-soft: #121212;
+      --gold: #e2b84f;
+      --gold-soft: rgba(226, 184, 79, 0.2);
+      --text: #f2f2f2;
+      --muted: #c1b9a2;
+      --danger: #ff5c5c;
+      --ok: #36d48f;
+      --glass: rgba(255, 255, 255, 0.04);
+      --radius: 18px;
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', 'Roboto', sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top right, #2b220d 0%, var(--bg) 35%), var(--bg);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .shell { max-width: 1200px; margin: 0 auto; }
+    .hidden { display: none !important; }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid rgba(226, 184, 79, 0.22);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    h1 { font-size: 1.05rem; }
+    .badge { font-size: 0.75rem; color: var(--muted); }
+    .btn {
+      border: 1px solid rgba(226, 184, 79, 0.35);
+      color: var(--text);
+      background: rgba(226, 184, 79, 0.12);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+    .btn:hover { background: rgba(226, 184, 79, 0.2); }
+    .btn.danger { border-color: rgba(255, 92, 92, .45); background: rgba(255, 92, 92, .15); }
+
+    .grid { display: grid; gap: 12px; }
+    .auth-box { padding: 20px; margin-top: 10vh; }
+    .auth-box h2 { color: var(--gold); margin-bottom: 8px; }
+    .help { color: var(--muted); font-size: .8rem; margin-bottom: 12px; }
+
+    .card { padding: 14px; }
+    .card h3 { font-size: .95rem; color: var(--gold); margin-bottom: 8px; }
+
+    label { font-size: .75rem; color: var(--muted); display: block; margin: 10px 0 6px; }
+    input, select, textarea {
+      width: 100%;
+      background: rgba(0,0,0,.32);
+      border: 1px solid rgba(226, 184, 79, 0.2);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 10px;
+      font-family: inherit;
+      font-size: .85rem;
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+    .inline { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .kpi { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }
+    .kpi .tile { padding: 10px; border-radius: 12px; background: rgba(0,0,0,0.25); border: 1px solid rgba(226,184,79,.2); }
+    .tile .value { font-size: 1.2rem; font-weight: 700; color: var(--gold); }
+    .tile .label { font-size: .75rem; color: var(--muted); }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    th, td { border-bottom: 1px solid rgba(226, 184, 79, 0.2); padding: 8px 6px; text-align: left; vertical-align: top; }
+    th { color: var(--gold); font-weight: 600; }
+
+    .pill { font-size: .68rem; border: 1px solid rgba(226,184,79,.35); border-radius: 999px; padding: 3px 8px; display: inline-block; }
+    .pill.bad { border-color: rgba(255,92,92,.45); color: #ff9696; }
+
+    #toast {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.78);
+      border: 1px solid rgba(226,184,79,.4);
+      color: var(--text);
+      font-size: .78rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+      z-index: 999;
+    }
+
+    #toast.show { opacity: 1; }
+
+    @media (min-width: 900px) {
+      .dashboard { display: grid; grid-template-columns: 1.1fr .9fr; gap: 12px; align-items: start; }
+    }
+  </style>
 </head>
 <body>
-    <div id="loginBox" style="text-align:center; padding-top:100px;">
-        <div class="card">
-            <h2>ACE Admin Panel</h2>
-            <input type="password" id="adminPin" placeholder="Enter PIN" maxlength="4">
-            <button class="btn" onclick="checkLogin()">UNLOCK</button>
+  <div class="shell">
+    <section id="authSection" class="glass auth-box">
+      <h2><i class="fa-solid fa-shield-halved"></i> Admin Login</h2>
+      <p class="help">Credentials are verified from Firebase node: <b>admin_credentials</b>.</p>
+      <label>Email</label><input type="email" id="adminEmail" placeholder="admin@paramountacademy.in" />
+      <label>Password</label><input type="password" id="adminPassword" placeholder="••••••••" />
+      <button class="btn" id="loginBtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+    </section>
+
+    <section id="adminSection" class="hidden">
+      <header class="top glass">
+        <div>
+          <h1>Paramount Academy Khandwa • Control Room</h1>
+          <p class="badge">Manage questions, PDFs, weekly tests, users and leaderboard.</p>
         </div>
-    </div>
+        <button class="btn danger" id="logoutBtn"><i class="fa-solid fa-power-off"></i> Logout</button>
+      </header>
 
-    <div id="adminDashboard" style="display:none;">
-        <div class="card">
-            <h3 style="margin-top:0;">📂 Add Content</h3>
-            <select id="mainSec">
-                <option>Course</option><option>Quiz</option><option>Test Series</option>
-                <option>Previous Year</option><option>PDF Notes</option><option>Online Exam</option>
-            </select>
-            <select id="subFold"><option>CPCT</option><option>Tally</option><option>Basic Computer</option><option>MPTET</option></select>
-            <select id="matType"><option>Test</option><option>PDF</option><option>Video</option></select>
-            <input type="text" id="iName" placeholder="Item Name (e.g. Mock Test 1)">
-            <input type="text" id="iID" placeholder="Sheet ID / Google Drive Link">
-            <select id="iType"><option value="Free">Free</option><option value="Paid">Paid</option></select>
-            <input type="number" id="iPrice" placeholder="Price (₹)">
-            <button class="btn" onclick="submitData()">PUBLISH NOW</button>
+      <div class="dashboard">
+        <div class="grid">
+          <article class="glass card">
+            <h3><i class="fa-solid fa-file-pdf"></i> Upload Study Material (URL)</h3>
+            <div class="inline">
+              <div><label>Exam</label><select id="pdfExam"><option>SSC</option><option>Railway</option><option>MP</option></select></div>
+              <div><label>Subject</label><select id="pdfSubject"><option>Maths</option><option>Reasoning</option><option>English</option><option>GS/GK</option><option>Current Affairs</option></select></div>
+            </div>
+            <label>Title</label><input id="pdfTitle" placeholder="Percentages Quick Notes" />
+            <label>PDF URL</label><input id="pdfUrl" placeholder="https://...pdf" />
+            <button class="btn" id="addPdfBtn">Publish PDF</button>
+          </article>
+
+          <article class="glass card">
+            <h3><i class="fa-solid fa-pen-to-square"></i> Add / Edit / Delete Question</h3>
+            <div class="inline">
+              <div><label>Question ID (leave blank for new)</label><input id="qId" placeholder="auto" /></div>
+              <div><label>Type</label><select id="qType"><option>sectional</option><option>full</option><option>weekly</option><option>daily</option></select></div>
+            </div>
+            <div class="inline">
+              <div><label>Exam</label><select id="qExam"><option>SSC</option><option>Railway</option><option>MP</option></select></div>
+              <div><label>Subject</label><select id="qSubject"><option>Maths</option><option>Reasoning</option><option>English</option><option>GS/GK</option><option>Current Affairs</option></select></div>
+            </div>
+            <label>Question</label><textarea id="qText"></textarea>
+            <label>Options (A|B|C|D)</label><input id="qOptions" placeholder="12|14|16|18" />
+            <div class="inline">
+              <div><label>Correct Option (0-3)</label><input id="qCorrect" type="number" min="0" max="3" /></div>
+              <div><label>Marks / Negative</label><input id="qMarks" placeholder="1,-0.25" /></div>
+            </div>
+            <div class="inline">
+              <button class="btn" id="saveQuestionBtn">Save Question</button>
+              <button class="btn danger" id="deleteQuestionBtn">Delete</button>
+            </div>
+          </article>
+
+          <article class="glass card">
+            <h3><i class="fa-solid fa-calendar-days"></i> Schedule Weekly Saturday Test</h3>
+            <div class="inline">
+              <div><label>Title</label><input id="weeklyTitle" placeholder="Weekly Grand Test #12" /></div>
+              <div><label>Date</label><input type="date" id="weeklyDate" /></div>
+            </div>
+            <div class="inline">
+              <div><label>Exam</label><select id="weeklyExam"><option>SSC</option><option>Railway</option><option>MP</option></select></div>
+              <div><label>Question IDs (comma separated)</label><input id="weeklyQids" placeholder="q1,q2,q3" /></div>
+            </div>
+            <button class="btn" id="scheduleWeeklyBtn">Schedule Test</button>
+          </article>
         </div>
-    </div>
 
-    <script>
-        const MASTER_URL = "https://script.google.com/macros/s/AKfycbzNKt3R8LQe_BhKsQmjDvSddqx_mPY9kE4NMZ9WPxe-gFyWfhFaUd6GAgW9hxLoBkASVw/exec";
-        
-        function checkLogin() {
-            if(document.getElementById('adminPin').value === "9913") {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-            } else { alert("Wrong PIN!"); }
-        }
+        <div class="grid">
+          <article class="glass card">
+            <h3><i class="fa-solid fa-chart-line"></i> Live Analytics</h3>
+            <div class="kpi">
+              <div class="tile"><div class="value" id="kUsers">0</div><div class="label">Students</div></div>
+              <div class="tile"><div class="value" id="kTests">0</div><div class="label">Results</div></div>
+              <div class="tile"><div class="value" id="kPdfs">0</div><div class="label">PDFs</div></div>
+              <div class="tile"><div class="value" id="kQuestions">0</div><div class="label">Questions</div></div>
+            </div>
+          </article>
 
-        async function submitData() {
-            let payload = {
-                action: 'add_content',
-                mainSection: document.getElementById('mainSec').value,
-                subFolder: document.getElementById('subFold').value,
-                matType: document.getElementById('matType').value,
-                itemName: document.getElementById('iName').value,
-                fileId: document.getElementById('iID').value,
-                type: document.getElementById('iType').value,
-                price: document.getElementById('iPrice').value
-            };
-            try {
-                let res = await fetch(MASTER_URL, { method: 'POST', body: JSON.stringify(payload) });
-                alert(await res.text());
-                location.reload();
-            } catch(e) { alert("Error!"); }
-        }
-    </script>
+          <article class="glass card">
+            <h3><i class="fa-solid fa-users"></i> Student Database</h3>
+            <div class="table-wrap"><table id="usersTable"><thead><tr><th>Name</th><th>Exam</th><th>State</th><th>Email</th></tr></thead><tbody></tbody></table></div>
+          </article>
+
+          <article class="glass card">
+            <h3><i class="fa-solid fa-trophy"></i> Leaderboard Control</h3>
+            <label>User ID</label><input id="lbUserId" placeholder="uid..." />
+            <label>Coins Delta (+/-)</label><input id="lbCoins" type="number" placeholder="10" />
+            <button class="btn" id="updateLbBtn">Update Coins</button>
+            <div class="table-wrap" style="margin-top:10px; max-height:220px; overflow:auto;"><table id="lbTable"><thead><tr><th>Rank</th><th>Name</th><th>Coins</th></tr></thead><tbody></tbody></table></div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import {
+      getDatabase, ref, set, push, update, remove, get,
+      onValue, query, limitToLast, orderByChild
+    } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: 'REPLACE_API_KEY',
+      authDomain: 'REPLACE_PROJECT.firebaseapp.com',
+      databaseURL: 'https://REPLACE_PROJECT-default-rtdb.firebaseio.com',
+      projectId: 'REPLACE_PROJECT',
+      storageBucket: 'REPLACE_PROJECT.appspot.com',
+      messagingSenderId: 'REPLACE',
+      appId: 'REPLACE'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const $ = (id) => document.getElementById(id);
+    const toast = $('toast');
+
+    const sessionKey = 'pak_admin_session';
+    const onlyAdminGate = () => {
+      const active = sessionStorage.getItem(sessionKey) === '1';
+      $('authSection').classList.toggle('hidden', active);
+      $('adminSection').classList.toggle('hidden', !active);
+    };
+
+    const notify = (msg) => {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    };
+
+    $('loginBtn').addEventListener('click', async () => {
+      const email = $('adminEmail').value.trim().toLowerCase();
+      const password = $('adminPassword').value;
+      if (!email || !password) return notify('Enter email and password');
+      const snap = await get(ref(db, 'admin_credentials'));
+      const admin = snap.val() || {};
+      if (admin.email?.toLowerCase() === email && admin.password === password) {
+        sessionStorage.setItem(sessionKey, '1');
+        onlyAdminGate();
+        notify('Admin authenticated');
+      } else notify('Invalid admin credentials');
+    });
+
+    $('logoutBtn').addEventListener('click', () => {
+      sessionStorage.removeItem(sessionKey);
+      onlyAdminGate();
+      notify('Logged out');
+    });
+
+    $('addPdfBtn').addEventListener('click', async () => {
+      const payload = {
+        title: $('pdfTitle').value.trim(),
+        url: $('pdfUrl').value.trim(),
+        exam: $('pdfExam').value,
+        subject: $('pdfSubject').value,
+        createdAt: Date.now(),
+        createdDate: new Date().toISOString().slice(0, 10)
+      };
+      if (!payload.title || !/^https?:\/\//.test(payload.url)) return notify('Valid title and URL required');
+      await set(push(ref(db, 'pdfs')), payload);
+      await push(ref(db, 'notifications'), { type: 'pdf', message: `New PDF: ${payload.title}`, createdAt: Date.now() });
+      notify('PDF uploaded');
+      $('pdfTitle').value = '';
+      $('pdfUrl').value = '';
+    });
+
+    $('saveQuestionBtn').addEventListener('click', async () => {
+      const id = $('qId').value.trim() || push(ref(db, 'questions')).key;
+      const options = $('qOptions').value.split('|').map(v => v.trim()).filter(Boolean);
+      const [marks = '1', negative = '-0.25'] = $('qMarks').value.split(',').map(v => v.trim());
+      const payload = {
+        id,
+        type: $('qType').value,
+        exam: $('qExam').value,
+        subject: $('qSubject').value,
+        text: $('qText').value.trim(),
+        options,
+        correct: Number($('qCorrect').value || 0),
+        marks: Number(marks),
+        negative: Number(negative),
+        updatedAt: Date.now()
+      };
+      if (!payload.text || options.length < 2) return notify('Question and min 2 options required');
+      await set(ref(db, `questions/${id}`), payload);
+      notify(`Question ${id} saved`);
+      $('qId').value = id;
+    });
+
+    $('deleteQuestionBtn').addEventListener('click', async () => {
+      const id = $('qId').value.trim();
+      if (!id) return notify('Enter question ID to delete');
+      await remove(ref(db, `questions/${id}`));
+      notify(`Deleted ${id}`);
+    });
+
+    $('scheduleWeeklyBtn').addEventListener('click', async () => {
+      const title = $('weeklyTitle').value.trim();
+      const date = $('weeklyDate').value;
+      if (!title || !date) return notify('Title and date are required');
+      const qids = $('weeklyQids').value.split(',').map(v => v.trim()).filter(Boolean);
+      const id = push(ref(db, 'weekly_tests')).key;
+      await set(ref(db, `weekly_tests/${id}`), {
+        id, title, date, exam: $('weeklyExam').value, questionIds: qids, enabled: true, createdAt: Date.now()
+      });
+      await push(ref(db, 'notifications'), { type: 'weekly', message: `Weekly test live: ${title}`, createdAt: Date.now() });
+      notify('Weekly test scheduled');
+    });
+
+    $('updateLbBtn').addEventListener('click', async () => {
+      const uid = $('lbUserId').value.trim();
+      const delta = Number($('lbCoins').value || 0);
+      if (!uid || !delta) return notify('User ID and coins delta required');
+      const userRef = ref(db, `users/${uid}`);
+      const snap = await get(userRef);
+      const user = snap.val();
+      if (!user) return notify('User not found');
+      const coins = Number(user.coins || 0) + delta;
+      await update(userRef, { coins });
+      await set(ref(db, `leaderboard/${uid}`), { uid, name: user.name || 'Student', coins });
+      notify('Leaderboard updated');
+    });
+
+    onValue(ref(db, 'users'), (snap) => {
+      const users = snap.val() || {};
+      const tbody = $('usersTable').querySelector('tbody');
+      tbody.innerHTML = Object.entries(users).slice(0, 40).map(([, u]) => `
+        <tr><td>${u.name || '-'}</td><td><span class="pill">${u.examCategory || '-'}</span></td><td>${u.state || '-'}</td><td>${u.email || '-'}</td></tr>
+      `).join('') || '<tr><td colspan="4">No students yet.</td></tr>';
+      $('kUsers').textContent = Object.keys(users).length;
+    });
+
+    onValue(ref(db, 'questions'), (snap) => $('kQuestions').textContent = Object.keys(snap.val() || {}).length);
+    onValue(ref(db, 'pdfs'), (snap) => $('kPdfs').textContent = Object.keys(snap.val() || {}).length);
+    onValue(ref(db, 'results'), (snap) => $('kTests').textContent = Object.keys(snap.val() || {}).length);
+
+    onValue(query(ref(db, 'leaderboard'), orderByChild('coins'), limitToLast(25)), (snap) => {
+      const rows = Object.values(snap.val() || {}).sort((a, b) => (b.coins || 0) - (a.coins || 0));
+      const tbody = $('lbTable').querySelector('tbody');
+      tbody.innerHTML = rows.map((r, i) => `<tr><td>#${i + 1}</td><td>${r.name || '-'}</td><td>${r.coins || 0}</td></tr>`).join('') || '<tr><td colspan="3">No entries</td></tr>';
+    });
+
+    onlyAdminGate();
+  </script>
 </body>
 </html>
